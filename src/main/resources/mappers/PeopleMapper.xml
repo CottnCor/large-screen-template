@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.largeScreen.api.mapper.PeopleMapper">
+    <select id="selectYxAccount" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <select id="selectUserInfo" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <select id="selectUserState" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <select id="selectUserLocation" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <select id="selectUserTree" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <insert id="insertMessage" statementType="STATEMENT">
+
+    </insert>
+</mapper>

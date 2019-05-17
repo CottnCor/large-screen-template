@@ -13,11 +13,11 @@ public interface CommonMapper {
 
     List<Map> selectRegionByParent(@Param("xzqdm") String xzqdm);
 
-    List<Map> selectRegionByXzqdm(@Param("xzqdm") String code);
-
-    List<Map> selectRegionWktByXzqdm(@Param("xzqdm") String code);
-
     List<Map> selectRegionByBounds(@Param("level") Integer level, @Param("wkt") String wkt);
 
-    List<Map> selectRegionTagByXzqdm(@Param("xzqdm") String code);
+    Map selectRegionByXzqdm(@Param("xzqdm") String xzqdm);
+
+    Map selectRegionWktByXzqdm(@Param("xzqdm") String xzqdm);
+
+    Map selectRegionTagByXzqdm(@Param("xzqdm") String xzqdm);
 }

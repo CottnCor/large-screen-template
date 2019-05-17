@@ -9,12 +9,11 @@ public interface ICommonService {
 
     List<Map> getRegionByParent(String xzqdm);
 
-    List<Map> getRegionByXzqdm(String xzqdm);
-
-    List<Map> getRegionWktByXzqdm(String xzqdm);
-
     List<Map> getRegionByBounds(Integer level, String wkt);
 
-    List<Map> getRegionTagByXzqdm(String xzqdm);
+    Map getRegionByXzqdm(String xzqdm);
 
+    Map getRegionWktByXzqdm(String xzqdm);
+
+    Map getRegionTagByXzqdm(String xzqdm);
 }

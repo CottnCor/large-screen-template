@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.largeScreen.api.mapper.DispatchMapper">
+    <select id="selectDispatchOverview" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <select id="selectDispatchMap" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <select id="selectDispatchList" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <select id="selectDispatchInfo" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <select id="selectDispatchLocation" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <insert id="insertDispatchRecord" statementType="STATEMENT">
+
+    </insert>
+    <update id="updateDispatchState" statementType="STATEMENT">
+
+    </update>
+    <update id="lockDispatch" statementType="STATEMENT">
+
+    </update>
+    <update id="unlockDispatch" statementType="STATEMENT">
+
+    </update>
+    <select id="statisticDispatch" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+    <select id="selectTimeSegments" resultType="java.util.Map" statementType="STATEMENT">
+
+    </select>
+</mapper>

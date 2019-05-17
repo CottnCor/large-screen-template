@@ -16,7 +16,7 @@ public class CommonServiceImpl implements ICommonService {
     private CommonMapper commonMapper;
 
     @Override
-    @DataSource(DataSourceEnum.ZNFW)
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getRegionByLevel(Integer level){
         try {
             return commonMapper.selectRegionByLevel(level);
@@ -35,24 +35,6 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
-    public List<Map> getRegionByXzqdm(String xzqdm){
-        try {
-            return commonMapper.selectRegionByXzqdm(xzqdm);
-        }catch (Exception ex){
-            return null;
-        }
-    }
-
-    @Override
-    public List<Map> getRegionWktByXzqdm(String xzqdm){
-        try {
-            return commonMapper.selectRegionWktByXzqdm(xzqdm);
-        }catch (Exception ex){
-            return null;
-        }
-    }
-
-    @Override
     public List<Map> getRegionByBounds(Integer level, String wkt){
         try {
             return commonMapper.selectRegionByBounds(level, wkt);
@@ -62,9 +44,27 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
-    public List<Map> getRegionTagByXzqdm(String xzqdm){
+    public Map getRegionByXzqdm(String xzqdm){
         try {
-            return getRegionTagByXzqdm(xzqdm);
+            return commonMapper.selectRegionByXzqdm(xzqdm);
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
+    @Override
+    public Map getRegionWktByXzqdm(String xzqdm){
+        try {
+            return commonMapper.selectRegionWktByXzqdm(xzqdm);
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
+    @Override
+    public Map getRegionTagByXzqdm(String xzqdm){
+        try {
+            return commonMapper.selectRegionTagByXzqdm(xzqdm);
         }catch (Exception ex){
             return null;
         }

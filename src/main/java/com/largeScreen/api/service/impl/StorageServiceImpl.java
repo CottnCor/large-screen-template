@@ -1,4 +1,8 @@
 package com.largeScreen.api.service.impl;
 
-public class StorageServiceImpl {
+import com.largeScreen.api.service.IStorageService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class StorageServiceImpl implements IStorageService {
 }

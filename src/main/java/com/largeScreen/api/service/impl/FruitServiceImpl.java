@@ -1,4 +1,8 @@
 package com.largeScreen.api.service.impl;
 
-public class FruitServiceImpl {
+import com.largeScreen.api.service.IFruitService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FruitServiceImpl implements IFruitService {
 }

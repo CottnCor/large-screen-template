@@ -1,4 +1,8 @@
 package com.largeScreen.api.service.impl;
 
-public class QueryServiceImpl {
+import com.largeScreen.api.service.IQueryService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class QueryServiceImpl implements IQueryService {
 }
