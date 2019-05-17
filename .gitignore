@@ -1,10 +1,20 @@
 .DS_Store
+.idea
+.mvn
+target
 node_modules
 node_modules_back
+mvnw.cmd
+HELP.md
+mvnw
+lib
+target
 /dist
 *.zip
 *.7z
 *.rar
+*.iml
+*.properties
 
 # local env files
 .env.local
