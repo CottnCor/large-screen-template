@@ -4,7 +4,7 @@ public class LoginUser {
 
     private String username;
     private String password;
-    private Integer rememberMe;
+    private Integer rememberMe = 0;
 
     public String getUsername() {
         return username;

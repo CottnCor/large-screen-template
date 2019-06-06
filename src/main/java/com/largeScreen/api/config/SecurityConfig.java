@@ -1,5 +1,8 @@
 package com.largeScreen.api.config;
 
+import com.largeScreen.api.base.AuthFailureHandler;
+import com.largeScreen.api.base.AuthSuccessHandler;
+import com.largeScreen.api.base.CustomEncoder;
 import com.largeScreen.api.filter.JWTAuthenticationFilter;
 import com.largeScreen.api.filter.JWTAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -25,29 +28,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("userDetailsServiceImpl")
     private UserDetailsService userDetailsService;
 
-    // 加密密码
+    @Autowired
+    private AuthSuccessHandler authSuccessHandler;
+
+    @Autowired
+    private AuthFailureHandler authFailureHandler;
+
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
+    public CustomEncoder customEncoder(){
+        return new CustomEncoder();
     }
+
+//    @Bean
+//    public BCryptPasswordEncoder customEncoder(){
+//        return new BCryptPasswordEncoder();
+//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(customEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http.cors()
+                .and()
+                .csrf()
+                .disable()
+                .formLogin()
+                .loginProcessingUrl("/auth/login")
+                .successHandler(authSuccessHandler)
+                .failureHandler(authFailureHandler)
+                .and()
                 .authorizeRequests()
-                // 测试用资源，验证的用户才能访问
-                .antMatchers("/tasks/**").authenticated()
-                // 其他的放行
+                .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-                // 不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

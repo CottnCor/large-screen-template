@@ -9,10 +9,12 @@ import java.util.Date;
 public class JwtTokenUtil {
 
     public static final String TOKEN_HEADER = "Authorization";
+
     public static final String TOKEN_PREFIX = "Bearer ";
 
-    private static final String SECRET = "jwtsecretdemo";
-    private static final String ISS = "echisan";
+    private static final String SECRET = "20190606_word_peace";
+
+    private static final String ISS = "wooletor";
 
     // 记住密码过期时间=>1h
     private static final long EXPIRATION = 3600L;

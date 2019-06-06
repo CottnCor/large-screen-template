@@ -25,12 +25,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                     FilterChain chain) throws IOException, ServletException {
 
         String tokenHeader = request.getHeader(JwtTokenUtil.TOKEN_HEADER);
-        // 如果请求头中没有Authorization信息则直接放行了
-        if (tokenHeader == null || tokenHeader.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
+
+        if (tokenHeader == null) {
             chain.doFilter(request, response);
             return;
         }
-        // 如果请求头中有token，则进行解析，并且设置认证信息
+
         SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
         super.doFilterInternal(request, response, chain);
     }
@@ -38,9 +38,11 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     // 从token中获取用户信息并新建一个token
     private UsernamePasswordAuthenticationToken getAuthentication(String tokenHeader) {
         String token = tokenHeader.replace(JwtTokenUtil.TOKEN_PREFIX, "");
-        String username = JwtTokenUtil.getUsername(token);
-        if (username != null){
-            return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+        if(!JwtTokenUtil.isExpiration(token)){
+            String username = JwtTokenUtil.getUsername(token);
+            if (username != null){
+                return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+            }
         }
         return null;
     }
