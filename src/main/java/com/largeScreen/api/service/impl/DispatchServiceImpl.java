@@ -15,100 +15,100 @@ public class DispatchServiceImpl implements IDispatchService {
     private DispatchMapper dispatchMapper;
 
     @Override
-    public List<Map> getDispatchOverview(){
+    public List<Map> getDispatchOverview() {
         try {
             return dispatchMapper.selectDispatchOverview();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public List<Map> getDispatchMap(Integer limit, Integer page, String start, String end, Integer state){
+    public List<Map> getDispatchMap(Integer limit, Integer page, String start, String end, Integer state) {
         try {
             return dispatchMapper.selectDispatchMap(limit, page, start, end, state);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public List<Map> getDispatchList(Integer limit, Integer page, String start, String end, Integer state){
+    public List<Map> getDispatchList(Integer limit, Integer page, String start, String end, Integer state) {
         try {
             return dispatchMapper.selectDispatchList(limit, page, start, end, state);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Map getDispatchInfo(String id){
+    public Map getDispatchInfo(String id) {
         try {
             return dispatchMapper.selectDispatchInfo(id);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Map getDispatchLocation(String id){
+    public Map getDispatchLocation(String id) {
         try {
             return dispatchMapper.selectDispatchLocation(id);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Boolean addDispatchRecord(){
+    public Boolean addDispatchRecord() {
         try {
             return dispatchMapper.insertDispatchRecord();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Boolean setDispatchState(String id, Integer state, Integer connState){
+    public Boolean setDispatchState(String id, Integer state, Integer connState) {
         try {
             return dispatchMapper.updateDispatchState(id, state, connState);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Boolean lockDispatch(String id){
+    public Boolean lockDispatch(String id) {
         try {
             return dispatchMapper.lockDispatch(id);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Boolean unlockDispatch(String id){
+    public Boolean unlockDispatch(String id) {
         try {
             return dispatchMapper.unlockDispatch(id);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public List<Map> statisticDispatch(String start, String end){
+    public List<Map> statisticDispatch(String start, String end) {
         try {
             return dispatchMapper.statisticDispatch(start, end);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public List<Map> getTimeSegments(){
+    public List<Map> getTimeSegments() {
         try {
             return dispatchMapper.selectTimeSegments();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }

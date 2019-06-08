@@ -3,7 +3,11 @@ package com.largeScreen.api.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class JwtTokenUtil {
@@ -16,13 +20,10 @@ public class JwtTokenUtil {
 
     private static final String ISS = "wooletor";
 
-    // 记住密码过期时间=>1h
     private static final long EXPIRATION = 3600L;
 
-    // 记住密码过期时间=>7d
     private static final long EXPIRATION_REMEMBER = 604800L;
 
-    // 创建token
     public static String createToken(String username, boolean isRememberMe) {
         long expiration = isRememberMe ? EXPIRATION_REMEMBER : EXPIRATION;
         return Jwts.builder()
@@ -34,17 +35,31 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    // 从token中获取用户名
-    public static String getUsername(String token){
+    public static void refreshToken(String token) {
+        try {
+            if (!isExpiration(token)) {
+                String username = JwtTokenUtil.getUsername(token);
+                if (username != null) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            } else {
+                throw new AuthenticationServiceException("凭证已过期，请重新登录！");
+            }
+        } catch (Exception ex) {
+
+        }
+    }
+
+    public static String getUsername(String token) {
         return getTokenBody(token).getSubject();
     }
 
-    // 是否已过期
-    public static boolean isExpiration(String token){
+    public static boolean isExpiration(String token) {
         return getTokenBody(token).getExpiration().before(new Date());
     }
 
-    private static Claims getTokenBody(String token){
+    private static Claims getTokenBody(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET)
                 .parseClaimsJws(token)

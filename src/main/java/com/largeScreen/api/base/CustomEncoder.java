@@ -19,7 +19,7 @@ public class CustomEncoder implements PasswordEncoder {
     }
 
     public CustomEncoder(int strength) {
-        this(strength, (SecureRandom)null);
+        this(strength, (SecureRandom) null);
     }
 
     public CustomEncoder(int strength, SecureRandom random) {

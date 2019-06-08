@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSON;
  */
 public class Result {
 
-	private String status="OK";
+    private String status = "OK";
 
     private int code;
 
@@ -18,18 +18,18 @@ public class Result {
     public Result setCode(int code) {
         this.code = code;
         return this;
-    }    
+    }
 
     public String getStatus() {
-		return status;
-	}
+        return status;
+    }
 
-	public Result setStatus(String status) {
-		this.status = status;
-		return this;
-	}
+    public Result setStatus(String status) {
+        this.status = status;
+        return this;
+    }
 
-	public int getCode() {
+    public int getCode() {
         return code;
     }
 

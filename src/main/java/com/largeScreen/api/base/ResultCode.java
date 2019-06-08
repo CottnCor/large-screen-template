@@ -11,6 +11,8 @@ public enum ResultCode {
 
     UNAUTHORIZED(401),//未认证（签名错误）
 
+    FORBIDDEN(403),
+
     NOT_FOUND(404),//接口不存在
 
     INTERNAL_SERVER_ERROR(500);//服务器内部错误

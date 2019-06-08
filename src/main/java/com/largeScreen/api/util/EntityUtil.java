@@ -19,15 +19,15 @@ public class EntityUtil {
             entry = (Map.Entry) entries.next();
             name = (String) entry.getKey();
             Object valueObj = entry.getValue();
-            if(null == valueObj){
+            if (null == valueObj) {
                 value = "";
-            }else if(valueObj instanceof String[]){
-                String[] values = (String[])valueObj;
-                for(int i = 0; i < values.length; i++){
+            } else if (valueObj instanceof String[]) {
+                String[] values = (String[]) valueObj;
+                for (int i = 0; i < values.length; i++) {
                     value = values[i] + ",";
                 }
-                value = value.substring(0, value.length()-1);
-            }else{
+                value = value.substring(0, value.length() - 1);
+            } else {
                 value = valueObj.toString();
             }
             returnMap.put(name, value);
@@ -37,12 +37,13 @@ public class EntityUtil {
 
     /**
      * 实体类转Map
+     *
      * @param object
      * @return
      */
     public static Map<String, Object> entityToMap(Object object) {
         Map<String, Object> map = new HashMap();
-        for (Field field : object.getClass().getDeclaredFields()){
+        for (Field field : object.getClass().getDeclaredFields()) {
             try {
                 boolean flag = field.isAccessible();
                 field.setAccessible(true);
@@ -58,31 +59,32 @@ public class EntityUtil {
 
     /**
      * Map转实体类
-     * @param map 需要初始化的数据，key字段必须与实体类的成员名字一样，否则赋值为空
-     * @param entity  需要转化成的实体类
+     *
+     * @param map    需要初始化的数据，key字段必须与实体类的成员名字一样，否则赋值为空
+     * @param entity 需要转化成的实体类
      * @return
      */
     public static <T> T mapToEntity(Map<String, Object> map, Class<T> entity) {
         T t = null;
         try {
             t = entity.newInstance();
-            for(Field field : entity.getDeclaredFields()) {
+            for (Field field : entity.getDeclaredFields()) {
                 if (map.containsKey(field.getName())) {
                     boolean flag = field.isAccessible();
                     field.setAccessible(true);
                     Object object = map.get(field.getName());
-                    if (object!= null) {
-                        if(field.getType() == Integer.class){
+                    if (object != null) {
+                        if (field.getType() == Integer.class) {
                             field.set(t, Integer.parseInt(object.toString()));
-                        } else if(field.getType() == Long.class){
+                        } else if (field.getType() == Long.class) {
                             field.set(t, Long.parseLong(object.toString()));
-                        } else if(field.getType() == Double.class){
+                        } else if (field.getType() == Double.class) {
                             field.set(t, Double.parseDouble(object.toString()));
-                        } else if(field.getType() == Float.class){
+                        } else if (field.getType() == Float.class) {
                             field.set(t, Float.parseFloat(object.toString()));
-                        } else if(field.getType() == Boolean.class){
+                        } else if (field.getType() == Boolean.class) {
                             field.set(t, Boolean.getBoolean(object.toString()));
-                        } else{
+                        } else {
                             field.set(t, object.toString());
                         }
                     }

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 
 public class GlobalUtil {
 
-    public static String PackResponse(Object obj){
+    public static String PackResponse(Object obj) {
         return JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue);
     }
 }

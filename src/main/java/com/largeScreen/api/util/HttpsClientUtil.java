@@ -9,6 +9,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class HttpsClientUtil {
 
     public static HttpResult doGet(String url, Map<String, Object> map) throws Exception {
 
-        if(httpClient == null){
+        if (httpClient == null) {
             httpClient = HttpClients.createDefault();
         }
 
@@ -36,7 +37,7 @@ public class HttpsClientUtil {
 
         HttpGet httpGet = new HttpGet(uriBuilder.build());
 
-        if(httpResponse != null){
+        if (httpResponse != null) {
             httpResponse = null;
         }
 
@@ -53,7 +54,7 @@ public class HttpsClientUtil {
 
         if (httpResponse.getEntity() != null) {
             httpResult.setCode(httpResponse.getStatusLine().getStatusCode());
-            httpResult.setBody(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+            httpResult.setBody(EntityUtils.toString(httpResponse.getEntity(), "UTF-8"));
 
         } else {
             httpResult.setCode(httpResponse.getStatusLine().getStatusCode());
@@ -64,7 +65,7 @@ public class HttpsClientUtil {
 
     public static HttpResult doPost(String url, Map<String, Object> map) throws Exception {
 
-        if(httpClient == null){
+        if (httpClient == null) {
             httpClient = HttpClients.createDefault();
         }
 
@@ -83,7 +84,7 @@ public class HttpsClientUtil {
             httpPost.setEntity(formEntity);
         }
 
-        if(httpResponse != null){
+        if (httpResponse != null) {
             httpResponse = null;
         }
 
@@ -100,7 +101,7 @@ public class HttpsClientUtil {
 
         if (httpResponse.getEntity() != null) {
             httpResult.setCode(httpResponse.getStatusLine().getStatusCode());
-            httpResult.setBody(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+            httpResult.setBody(EntityUtils.toString(httpResponse.getEntity(), "UTF-8"));
         } else {
             httpResult.setCode(httpResponse.getStatusLine().getStatusCode());
         }
@@ -110,10 +111,10 @@ public class HttpsClientUtil {
 
     public static HttpResult doPut(String url, Map<String, Object> map) throws Exception {
 
-        if(httpClient == null){
+        if (httpClient == null) {
             httpClient = HttpClients.createDefault();
         }
-        
+
         HttpPut httpPut = new HttpPut(url);
 
         if (map != null) {
@@ -129,7 +130,7 @@ public class HttpsClientUtil {
             httpPut.setEntity(formEntity);
         }
 
-        if(httpResponse != null){
+        if (httpResponse != null) {
             httpResponse = null;
         }
 
@@ -146,7 +147,7 @@ public class HttpsClientUtil {
 
         if (httpResponse.getEntity() != null) {
             httpResult.setCode(httpResponse.getStatusLine().getStatusCode());
-            httpResult.setBody(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+            httpResult.setBody(EntityUtils.toString(httpResponse.getEntity(), "UTF-8"));
         } else {
             httpResult.setCode(httpResponse.getStatusLine().getStatusCode());
         }
@@ -156,10 +157,10 @@ public class HttpsClientUtil {
 
     public static HttpResult doDelete(String url, Map<String, Object> map) throws Exception {
 
-        if(httpClient == null){
+        if (httpClient == null) {
             httpClient = HttpClients.createDefault();
         }
-        
+
         URIBuilder uriBuilder = new URIBuilder(url);
 
         if (map != null) {
@@ -170,7 +171,7 @@ public class HttpsClientUtil {
 
         HttpDelete httpDelete = new HttpDelete(uriBuilder.build());
 
-        if(httpResponse != null){
+        if (httpResponse != null) {
             httpResponse = null;
         }
 
@@ -188,7 +189,7 @@ public class HttpsClientUtil {
 
         if (httpResponse.getEntity() != null) {
             httpResult.setCode(httpResponse.getStatusLine().getStatusCode());
-            httpResult.setBody(EntityUtils.toString(httpResponse.getEntity(),"UTF-8"));
+            httpResult.setBody(EntityUtils.toString(httpResponse.getEntity(), "UTF-8"));
         } else {
             httpResult.setCode(httpResponse.getStatusLine().getStatusCode());
         }

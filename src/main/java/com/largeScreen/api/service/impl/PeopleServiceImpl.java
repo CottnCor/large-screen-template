@@ -15,56 +15,56 @@ public class PeopleServiceImpl implements IPeopleService {
     private PeopleMapper peopleMapper;
 
     @Override
-    public Map getYxAccount(String userid){
+    public Map getYxAccount(String userid) {
         try {
             return peopleMapper.selectYxAccount(userid);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
-    }  
+    }
 
 
     @Override
-    public Map getUserInfo(String userid){
+    public Map getUserInfo(String userid) {
         try {
             return peopleMapper.selectUserInfo(userid);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Map getUserState(String userid){
+    public Map getUserState(String userid) {
         try {
             return peopleMapper.selectUserState(userid);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Map getUserLocation(String userid){
+    public Map getUserLocation(String userid) {
         try {
             return peopleMapper.selectUserLocation(userid);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public List<Map> getUserTree(){
+    public List<Map> getUserTree() {
         try {
             return peopleMapper.selectUserTree();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Boolean addMessage(String userid){
+    public Boolean addMessage(String userid) {
         try {
             return peopleMapper.insertMessage(userid);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }

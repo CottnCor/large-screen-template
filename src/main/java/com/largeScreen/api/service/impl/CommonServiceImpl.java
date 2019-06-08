@@ -6,6 +6,7 @@ import com.largeScreen.api.annotations.DataSource;
 import com.largeScreen.api.service.ICommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,55 +18,55 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public List<Map> getRegionByLevel(Integer level){
+    public List<Map> getRegionByLevel(Integer level) {
         try {
             return commonMapper.selectRegionByLevel(level);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public List<Map> getRegionByParent(String xzqdm){
+    public List<Map> getRegionByParent(String xzqdm) {
         try {
             return commonMapper.selectRegionByParent(xzqdm);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public List<Map> getRegionByBounds(Integer level, String wkt){
+    public List<Map> getRegionByBounds(Integer level, String wkt) {
         try {
             return commonMapper.selectRegionByBounds(level, wkt);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Map getRegionByXzqdm(String xzqdm){
+    public Map getRegionByXzqdm(String xzqdm) {
         try {
             return commonMapper.selectRegionByXzqdm(xzqdm);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Map getRegionWktByXzqdm(String xzqdm){
+    public Map getRegionWktByXzqdm(String xzqdm) {
         try {
             return commonMapper.selectRegionWktByXzqdm(xzqdm);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public Map getRegionTagByXzqdm(String xzqdm){
+    public Map getRegionTagByXzqdm(String xzqdm) {
         try {
             return commonMapper.selectRegionTagByXzqdm(xzqdm);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }

@@ -16,13 +16,13 @@ import java.lang.reflect.Method;
 public class DynamicDataSourceAspect implements Ordered {
 
     @Before("@annotation(com.largeScreen.api.annotations.DataSource)")
-    public void beforeSwitchDS(JoinPoint point){
+    public void beforeSwitchDS(JoinPoint point) {
 
         Class<?> className = point.getTarget().getClass();
 
         String methodName = point.getSignature().getName();
 
-        Class[] argClass = ((MethodSignature)point.getSignature()).getParameterTypes();
+        Class[] argClass = ((MethodSignature) point.getSignature()).getParameterTypes();
 
         String dataSource = DataSourceContextHolder.DEFAULT_DS;
 
@@ -39,7 +39,7 @@ public class DynamicDataSourceAspect implements Ordered {
     }
 
     @After("@annotation(com.largeScreen.api.annotations.DataSource)")
-    public void afterSwitchDS(JoinPoint point){
+    public void afterSwitchDS(JoinPoint point) {
         DataSourceContextHolder.clearDB();
     }
 
