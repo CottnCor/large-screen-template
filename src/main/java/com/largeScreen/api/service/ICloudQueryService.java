@@ -1,4 +1,4 @@
 package com.largeScreen.api.service;
 
-public interface IQueryService {
+public interface ICloudQueryService {
 }

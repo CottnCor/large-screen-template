@@ -15,27 +15,51 @@ public class PeopleController {
     @Resource
     private IPeopleService peopleService;
 
-    @GetMapping("/getYxAccount")
-    public String getYxAccount(@RequestParam(name="userid",required=true)String userid) {
-        Map map = peopleService.getYxAccount(userid);
+    @GetMapping("/getPeopleOverview")
+    public String getUserOverview(@RequestParam(name="type",required=true)String type) {
+        Map map = peopleService.getPeopleOverview(type);
+        return GlobalUtil.PackResponse(map);
+    }
+
+    @GetMapping("/getLevelCounts")
+    public String getLevelCounts(@RequestParam(name="type",required=true)String type) {
+        List<Map> maps = peopleService.getLevelCounts(type);
+        return GlobalUtil.PackResponse(maps);
+    }
+
+    @GetMapping("/getPeopleCounts")
+    public String getPeopleCounts(@RequestParam(name="type",required=true)String type, @RequestParam(name="xzqdm",required=false)String xzqdm) {
+        List<Map> maps = peopleService.getPeopleCounts(type, xzqdm);
+        return GlobalUtil.PackResponse(maps);
+    }
+
+    @GetMapping("/getPeopleCoords")
+    public String getPeopleCoords(@RequestParam(name="level",required=true)Short level, @RequestParam(name="bounds",required=false)String bounds) {
+        List<Map> maps = peopleService.getPeopleCoords(level, bounds);
+        return GlobalUtil.PackResponse(maps);
+    }
+
+    @GetMapping("/getYxInfo")
+    public String getYxAccount(@RequestParam(name="userid",required=true)Long userid) {
+        Map map = peopleService.getYxInfo(userid);
         return GlobalUtil.PackResponse(map);
     }
 
     @GetMapping("/getUserInfo")
-    public String getUserInfo(@RequestParam(name="userid",required=true)String userid) {
+    public String getUserInfo(@RequestParam(name="userid",required=true)Long userid) {
         Map map = peopleService.getUserInfo(userid);
         return GlobalUtil.PackResponse(map);
     }
 
     @GetMapping("/getUserState")
-    public String getUserState(@RequestParam(name="userid",required=true)String userid) {
+    public String getUserState(@RequestParam(name="userid",required=true)Long userid) {
         Map map = peopleService.getUserState(userid);
         return GlobalUtil.PackResponse(map);
     }
 
-    @GetMapping("/getUserLocation")
-    public String getUserLocation(@RequestParam(name="userid",required=true)String userid) {
-        Map map = peopleService.getUserLocation(userid);
+    @GetMapping("/getUserCoords")
+    public String getUserLocation(@RequestParam(name="userid",required=true)Long userid) {
+        Map map = peopleService.getUserCoords(userid);
         return GlobalUtil.PackResponse(map);
     }
 
@@ -46,8 +70,8 @@ public class PeopleController {
     }
 
     @PostMapping("/addMessage")
-    public String addMessage(@RequestParam(name="userid",required=true)String userid) {
-        Boolean status = peopleService.addMessage(userid);
+    public String addMessage(@RequestParam(name="userid",required=true)Long userid, @RequestParam(name="msg",required=true)String msg) {
+        Boolean status = peopleService.sendMsg(userid, msg);
         return GlobalUtil.PackResponse(status);
     }
 }

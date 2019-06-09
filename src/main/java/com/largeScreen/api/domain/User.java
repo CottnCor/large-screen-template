@@ -1,4 +1,4 @@
-package com.largeScreen.api.entity;
+package com.largeScreen.api.domain;
 
 import javax.persistence.*;
 

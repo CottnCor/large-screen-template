@@ -5,15 +5,17 @@ import java.util.Map;
 
 public interface ICommonService {
 
-    List<Map> getRegionByLevel(Integer level);
+    List<Map> getRegionByLevel(Short level);
 
     List<Map> getRegionByParent(String xzqdm);
 
-    List<Map> getRegionByBounds(Integer level, String wkt);
+    List<Map> getRegionByBounds(Short level, String wkt);
 
     Map getRegionByXzqdm(String xzqdm);
 
     Map getRegionWktByXzqdm(String xzqdm);
 
     Map getRegionTagByXzqdm(String xzqdm);
+
+    List<Map> getRegionGroups();
 }

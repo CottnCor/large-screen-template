@@ -1,22 +1,571 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.largeScreen.api.mapper.PeopleMapper">
-    <select id="selectYxAccount" resultType="java.util.Map" statementType="STATEMENT">
-
-    </select>
-    <select id="selectUserInfo" resultType="java.util.Map" statementType="STATEMENT">
-
-    </select>
-    <select id="selectUserState" resultType="java.util.Map" statementType="STATEMENT">
-
-    </select>
-    <select id="selectUserLocation" resultType="java.util.Map" statementType="STATEMENT">
-
-    </select>
-    <select id="selectUserTree" resultType="java.util.Map" statementType="STATEMENT">
-
-    </select>
-    <insert id="insertMessage" statementType="STATEMENT">
+    <insert id="insertMsg" statementType="STATEMENT">
 
     </insert>
+    <select id="selectYxInfo" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT f_userid AS userid,
+               f_accid  AS accid,
+               f_status AS status
+        FROM tb_user2yx
+        WHERE f_userid = ${userid}
+    </select>
+    <select id="selectUserInfo" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT T.f_userid                                             as userid,
+               T.f_rname                                              AS name,
+               T.f_email                                              AS email,
+               T.f_phonework                                          AS phone,
+               ''                                                     AS desc,
+               T.f_userposid                                          AS agent,
+               T.f_create_date :: timestamptz                         AS createtime,
+               T.f_create_date :: timestamptz                         AS updatetime,
+               "substring"((T.f_regregion || '000000') :: TEXT, 1, 6) AS xzqdm,
+               ''                                                     AS deviceid,
+               T.f_rolename                                           AS role
+        FROM (SELECT t1.*
+              FROM (SELECT T
+                               .f_userid,
+                           T.f_rname,
+                           T.f_email,
+                           T.f_phonework,
+                           T.f_userposid,
+                           T.f_create_date,
+                           T.f_regregion AS f_regregion,
+                           T.f_rolename
+                    FROM (SELECT z1.f_userid,
+                                 z1.f_rname,
+                                 z1.f_email,
+                                 z1.f_phonework,
+                                 z1.f_userposid,
+                                 z1.f_create_date,
+                                 z1.f_regregion,
+                                 z2.f_rolename
+                          FROM (SELECT e1.f_userid,
+                                       e1.f_rname,
+                                       e1.f_email,
+                                       e1.f_phonework,
+                                       e1.f_userposid,
+                                       e1.f_create_date,
+                                       string_agg(e1.f_regioncode, ',') AS f_regregion
+                                FROM (SELECT c1.f_userid,
+                                             c1.f_rname,
+                                             c1.f_email,
+                                             c1.f_phonework,
+                                             c1.f_userposid,
+                                             c1.f_create_date,
+                                             c2.f_regioncode
+                                      FROM tbsys_user c1
+                                               LEFT JOIN tbsys_user_area c2 ON c1.f_userid = c2.f_userid) e1
+                                GROUP BY e1.f_userid,
+                                         e1.f_rname,
+                                         e1.f_email,
+                                         e1.f_phonework,
+                                         e1.f_userposid,
+                                         e1.f_create_date) z1
+                                   LEFT JOIN (SELECT h1.*, h2.f_rolename
+                                              FROM tbsys_user_role h1
+                                                       LEFT JOIN tbsys_role h2
+                                                                 ON h1.f_roleid = h2.f_roleid) z2
+                                             ON z1.f_userid = z2.f_userid) T
+                    WHERE T.f_userid IS NOT NULL) t1) T
+        WHERE T.f_userid = ${userid}
+    </select>
+    <select id="selectUserState" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT COUNT
+                   (f_userid) AS state
+        FROM tbsys_lock
+        WHERE f_createtime > (now() - '00:01:00' :: INTERVAL)
+          AND f_userid = ${userid}
+    </select>
+    <select id="selectPeopleState" resultType="java.util.Map" statementType="STATEMENT">
+        WITH t0 AS (SELECT f_userid, f_regregion FROM tb_reguser),
+             t3 AS (
+                 SELECT t2.f_userid,
+                        t2.f_username,
+                        t1.f_regregion
+                 FROM (SELECT f_userid, f_regregion FROM t0) t1
+                          LEFT JOIN (SELECT f_userid, f_username FROM tbsys_user WHERE f_isdeleted = 0) t2
+                                    ON t1.f_userid = t2.f_userid
+             ),
+             t4 AS (SELECT f_userid, f_username, f_regregion FROM t3 WHERE f_regregion IS NOT NULL),
+             t5 AS (SELECT f_xzqdm, f_xzqmc FROM tb_region),
+             t6 AS (SELECT t5.f_xzqdm, t5.f_xzqmc, t4.f_userid, t4.f_username
+                    FROM t4
+                             LEFT JOIN t5 ON t5.f_xzqdm = t4.f_regregion),
+             t7 AS (SELECT t5.f_userid FROM tbsys_lock t5 WHERE t5.f_createtime > (now() - '00:01:00' :: INTERVAL)),
+             t8 AS (SELECT f_xzqdm AS xzqdm, f_xzqmc AS xzqmc, f_userid AS userid, f_username AS username
+                    FROM t6
+                    WHERE f_userid IS NOT NULL),
+             t9 AS (
+                 SELECT t8.xzqdm,
+                        t8.xzqmc,
+                        t8.userid,
+                        t8.username,
+                        (CASE WHEN (t8.userid IN (SELECT t7.f_userid FROM t7)) THEN 1 ELSE 0 END) AS STATE
+                 FROM t8
+             )
+        SELECT *
+        FROM t9
+        ORDER BY xzqdm,
+                 STATE DESC
+    </select>
+    <select id="selectUserCoords" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT f_lon AS lng,
+               f_lat AS lat
+        FROM tb_devicetrack
+        WHERE f_userid = ${userid}
+    </select>
+    <select id="selectPeopleCoords" resultType="java.util.Map" statementType="STATEMENT">
+        WITH RESULT AS (
+            SELECT f1.lng,
+                   f1.lat,
+                   f1.userid,
+                   f1.NAME
+            FROM (
+                     SELECT A.f_lon      AS lng,
+                            A.f_lat      AS lat,
+                            A.f_userid   AS userid,
+                            A.f_username AS NAME
+                     FROM (
+                              WITH A AS (
+                                  SELECT T.f_lon,
+                                         T.f_lat,
+                                         T.f_sbid,
+                                         T.f_userid
+                                  FROM (SELECT tb_devicetrack.f_lon,
+                                               tb_devicetrack.f_lat,
+                                               tb_devicetrack.f_sbid,
+                                               tb_devicetrack.f_userid
+                                        FROM tb_devicetrack) T
+                                  ),
+                                  b AS ( SELECT tbsys_user.f_userid, tbsys_user.f_username FROM tbsys_user ) SELECT A.f_lon,
+                                                                                                                    A.f_lat,
+                                                                                                                    A.f_sbid,
+                                                                                                                    A.f_userid,
+                                                                                                                    b.f_username
+                                                                                                             FROM (
+                                                                                                                   A
+                                                                                                                      LEFT JOIN b
+                                                                                                                                ON ((
+                                                                                                                                    A.f_userid = b.f_userid
+                                                                                                                                    )))) A
+                              LEFT JOIN tbsys_user b ON A.f_userid = b.f_userid
+                     WHERE A.f_userid IN (
+                         SELECT f_userid
+                         FROM tbsys_lock
+                         WHERE f_createtime > (now() - '00:01:00' :: INTERVAL))
+                       AND ST_Contains(ST_SetSRID(st_geometryfromtext('${wkt}'), 4490),
+                                       ST_SetSRID(ST_MAKEPOINT(A.f_lon, A.f_lat), 4490))) f1
+        )
+        SELECT A.*
+        FROM RESULT A
+        WHERE A.lng IS NOT NULL
+          AND A.lat IS NOT NULL
+    </select>
+    <select id="selectPeopleCluster" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+        tmp.onlinecount AS COUNT,
+        tmp.f_xzqdm AS xzqdm,
+        tmp.f_xzqmc AS xzqmc,
+        tmp.f_centerx AS lng,
+        tmp.f_centery AS lat
+        FROM
+        (
+        WITH xzq AS (
+        SELECT
+        f_xzqdm,
+        f_xzqmc,
+        f_centerx,
+        f_centery,
+        f_level,
+        shape
+        FROM
+        tb_region
+        WHERE
+        f_xzqdm NOT IN ( SELECT f_xzqdm FROM tb_region WHERE shape IS NULL )
+        AND
+        <choose>
+            <when test="level==2">
+                f_level = 2 AND (${filter})
+            </when>
+            <otherwise>
+                f_level = 1
+            </otherwise>
+        </choose>
+        ),
+        u AS (
+        SELECT
+        ST_SetSRID ( ST_MAKEPOINT ( A.f_lon, A.f_lat ), 4490 ) AS point
+        FROM
+        (
+        WITH A AS (
+        SELECT T
+        .f_lon,
+        T.f_lat,
+        T.f_sbid,
+        T.f_userid
+        FROM
+        ( SELECT tb_devicetrack.f_lon, tb_devicetrack.f_lat, tb_devicetrack.f_sbid, tb_devicetrack.f_userid FROM
+        tb_devicetrack ) T
+        ),
+        b AS ( SELECT tbsys_user.f_userid FROM tbsys_user ) SELECT A
+        .f_lon,
+        A.f_lat,
+        A.f_sbid,
+        A.f_userid
+        FROM
+        (
+        A LEFT JOIN b ON ((
+        A.f_userid = b.f_userid
+        ))))
+        A LEFT JOIN tbsys_user b ON A.f_userid = b.f_userid
+        WHERE
+        A.f_userid IN (
+        SELECT
+        f_userid
+        FROM
+        tbsys_lock
+        WHERE
+        f_createtime > ( now() - '00:01:00' :: INTERVAL ))),
+        cc AS (
+        SELECT
+        xzq.f_xzqdm
+        FROM
+        u
+        LEFT JOIN xzq ON ST_Contains ( xzq.shape, u.point )),
+        dd AS ( SELECT COUNT ( 1 ) AS onlinecount, f_xzqdm FROM cc GROUP BY f_xzqdm ) SELECT
+        dd.onlinecount,
+        dd.f_xzqdm,
+        xzq.f_xzqmc,
+        xzq.f_centerx,
+        xzq.f_centery
+        FROM
+        dd
+        LEFT JOIN xzq ON dd.f_xzqdm = xzq.f_xzqdm
+        ) tmp
+        WHERE
+        tmp.f_xzqdm IS NOT NULL
+        ) RESULT
+        WHERE
+        RESULT.lng IS NOT NULL
+        AND RESULT.lat IS NOT NULL
+    </select>
+    <select id="selectPeopleCounts" resultType="java.util.Map" statementType="STATEMENT">
+        WITH t0 AS (
+        <choose>
+            <when test="type=='sdhc'">
+                SELECT f_userid, f_regregion FROM tb_reguser
+                <choose>
+                    <when test="level==2">
+                        WHERE (SUBSTRING ( f_regregion, 0, 5 ) || '00') LIKE '${filter}'
+                    </when>
+                    <when test="level==3">
+                        WHERE f_regregion LIKE '${filter}'
+                    </when>
+                </choose>
+            </when>
+            <when test="type=='znfw'">
+                SELECT f_userid, f_regioncode AS f_regregion FROM tbsys_user_area
+                <choose>
+                    <when test="level==2">
+                        WHERE (SUBSTRING ( f_regioncode, 0, 5 ) || '00') LIKE '${filter}'
+                    </when>
+                    <when test="level==3">
+                        WHERE f_regioncode LIKE '${filter}'
+                    </when>
+                </choose>
+            </when>
+        </choose>
+        ),
+        t3 AS (
+        SELECT
+        t1.f_userid,
+        t2.f_regregion
+        FROM
+        ( SELECT f_userid FROM tbsys_user WHERE f_isdeleted = 0 ) t1
+        LEFT JOIN ( SELECT f_userid, f_regregion FROM t0 ) t2 ON t1.f_userid = t2.f_userid
+        ),
+        t4 AS ( SELECT f_userid, f_regregion FROM t3 WHERE f_regregion IS NOT NULL ),
+        t6 AS (
+        <choose>
+            <when test="type=='sdhc'">
+                SELECT t5.f_userid FROM tbsys_lock t5 WHERE t5.f_createtime > ( now() - '00:01:00' :: INTERVAL )
+            </when>
+            <when test="type=='znfw'">
+                SELECT t5.f_userid FROM tb_user2yx t5
+            </when>
+        </choose>
+        ),
+        t7 AS (
+        SELECT
+        ( CASE WHEN ( t6.f_userid IS NULL ) THEN 0 :: NUMERIC ELSE 1 :: NUMERIC END ) AS STATE,
+        t4.f_userid,
+        t4.f_regregion
+        FROM
+        t4
+        LEFT JOIN t6 ON t6.f_userid = t4.f_userid
+        ),
+        t8 AS ( SELECT f_xzqdm, f_xzqmc FROM tb_region WHERE f_level = ${level}
+        <choose>
+            <when test="level==2">
+                AND (SUBSTRING ( f_xzqdm, 0, 5 ) || '00') LIKE '${filter}'
+            </when>
+            <when test="level==3">
+                AND f_xzqdm LIKE '${filter}'
+            </when>
+        </choose>
+        ),
+        t9 AS (
+        SELECT COUNT
+        ( f_userid ),
+        <choose>
+            <when test="level==1">
+                SUBSTRING( f_regregion, 0, 3 ) || '0000' AS f_regregion,
+            </when>
+            <when test="level==2">
+                SUBSTRING( f_regregion, 0, 5 ) || '00' AS f_regregion,
+            </when>
+            <when test="level==3">
+                f_regregion,
+            </when>
+        </choose>
+        STATE
+        FROM
+        t7
+        GROUP BY
+        <choose>
+            <when test="level==1">
+                SUBSTRING ( f_regregion, 0, 3 ) || '0000',
+            </when>
+            <when test="level==2">
+                SUBSTRING ( f_regregion, 0, 5 ) || '00',
+            </when>
+            <when test="level==3">
+                f_regregion,
+            </when>
+        </choose>
+        STATE
+        ),
+        t10 AS (
+        SELECT
+        t8.f_xzqdm AS xzqdm,
+        t8.f_xzqmc AS xzqmc,
+        ( CASE WHEN t9.COUNT IS NULL THEN 0 ELSE t9.COUNT END ) AS COUNT,
+        t9.STATE
+        FROM
+        t8
+        LEFT JOIN t9 ON t8.f_xzqdm = t9.f_regregion
+        ) SELECT
+        xzqdm,
+        xzqmc,
+        SUM ( CASE WHEN STATE = 0 THEN COUNT ELSE 0 END ) AS offline,
+        SUM ( CASE WHEN STATE = 1 THEN COUNT ELSE 0 END ) AS online
+        FROM
+        t10
+        GROUP BY
+        xzqdm,
+        xzqmc
+    </select>
+    <select id="selectLevelCounts" resultType="java.util.Map" statementType="STATEMENT">
+        WITH t0 AS ( SELECT f_userid FROM tbsys_user WHERE f_isdeleted = 0 ),
+        t3 AS (
+        SELECT
+        <choose>
+            <when test="type=='sdhc'">
+                t1.f_userid,
+                t2.f_roleid,
+                t2.f_pid
+            </when>
+            <when test="type=='znfw'">
+                t1.f_userid,
+                t2.f_roleid
+            </when>
+        </choose>
+        FROM
+        ( SELECT f_userid FROM t0 ) t1
+        LEFT JOIN (
+        SELECT
+        <choose>
+            <when test="type=='sdhc'">
+                t9.f_userid,
+                t9.f_roleid,
+                t9.f_pid
+            </when>
+            <when test="type=='znfw'">
+                t9.f_userid,
+                t9.f_roleid
+            </when>
+        </choose>
+        FROM
+        ( SELECT
+        <choose>
+            <when test="type=='sdhc'">
+                t7.f_roleid,
+                t7.f_userid,
+                t8.f_pid
+            </when>
+            <when test="type=='znfw'">
+                t7.f_roleid,
+                t7.f_userid
+            </when>
+        </choose>
+        FROM tbsys_user_role t7 LEFT JOIN tbsys_role t8 ON t7.f_roleid = t8.f_roleid ) t9
+        ) t2 ON t1.f_userid = t2.f_userid
+        ),
+        s0 AS (
+        <choose>
+            <when test="type=='sdhc'">
+                SELECT f_userid FROM tbsys_lock WHERE f_createtime > ( now() - '00:01:00' :: INTERVAL )
+            </when>
+            <when test="type=='znfw'">
+                SELECT f_userid FROM tb_user2yx
+            </when>
+        </choose>
+        ),
+        s3 AS (
+        SELECT
+        <choose>
+            <when test="type=='sdhc'">
+                s1.f_userid,
+                s2.f_roleid,
+                s2.f_pid
+            </when>
+            <when test="type=='znfw'">
+                s1.f_userid,
+                s2.f_roleid
+            </when>
+        </choose>
+        FROM
+        ( SELECT f_userid FROM s0 ) s1
+        LEFT JOIN (
+        SELECT
+        <choose>
+            <when test="type=='sdhc'">
+                s9.f_userid,
+                s9.f_roleid,
+                s9.f_pid
+            </when>
+            <when test="type=='znfw'">
+                s9.f_userid,
+                s9.f_roleid
+            </when>
+        </choose>
+        FROM
+        ( SELECT
+        <choose>
+            <when test="type=='sdhc'">
+                s7.f_roleid,
+                s7.f_userid,
+                s8.f_pid
+            </when>
+            <when test="type=='znfw'">
+                s7.f_roleid,
+                s7.f_userid
+            </when>
+        </choose>
+        FROM tbsys_user_role s7 LEFT JOIN tbsys_role s8 ON s7.f_roleid = s8.f_roleid ) s9
+        ) s2 ON s1.f_userid = s2.f_userid
+        ),
+        t4 AS (
+        SELECT
+        CASE
+        <choose>
+            <when test="type=='sdhc'">
+                WHEN
+                ( t3.f_pid = 1001 ) THEN
+                '国家级'
+                WHEN ( t3.f_pid = 1002 ) THEN
+                '省级'
+                WHEN ( t3.f_pid = 2001 OR t3.f_roleid = 10004 ) THEN
+                '区县级'
+                END AS f_level,
+            </when>
+            <when test="type=='znfw'">
+                WHEN
+                ( t3.f_roleid = 10012 ) THEN
+                '国家级'
+                WHEN ( t3.f_roleid = 10003 ) THEN
+                '省级'
+                WHEN ( t3.f_roleid = 10018 ) THEN
+                '市级'
+                WHEN ( t3.f_roleid = 10019 ) THEN
+                '区县级'
+                END AS f_level,
+            </when>
+        </choose>
+        t3.f_userid
+        FROM
+        t3
+        ),
+        s4 AS (
+        SELECT
+        CASE
+        <choose>
+            <when test="type=='sdhc'">
+                WHEN
+                ( s3.f_pid = 1001 ) THEN
+                '国家级'
+                WHEN ( s3.f_pid = 1002 ) THEN
+                '省级'
+                WHEN ( s3.f_pid = 2001 OR s3.f_roleid = 10004 ) THEN
+                '区县级'
+                END AS f_level,
+            </when>
+            <when test="type=='znfw'">
+                WHEN
+                ( s3.f_roleid = 10012 ) THEN
+                '国家级'
+                WHEN ( s3.f_roleid = 10003 ) THEN
+                '省级'
+                WHEN ( s3.f_roleid = 10018 ) THEN
+                '市级'
+                WHEN ( s3.f_roleid = 10019 ) THEN
+                '区县级'
+                END AS f_level,
+            </when>
+        </choose>
+        s3.f_userid
+        FROM
+        s3
+        ),
+        t5 AS ( SELECT '国家级' AS f_level UNION ALL SELECT '省级' AS f_level UNION ALL SELECT '市级' AS f_level UNION ALL
+        SELECT '区县级' AS f_level ),
+        t6 AS ( SELECT f_level, COUNT ( f_userid ) FROM t4 WHERE f_level IS NOT NULL GROUP BY f_level ),
+        s6 AS ( SELECT f_level, COUNT ( f_userid ) FROM s4 WHERE f_level IS NOT NULL GROUP BY f_level ),
+        t10 AS (
+        SELECT
+        t5.f_level AS LEVEL,
+        CASE
+
+        WHEN t6.COUNT IS NULL THEN
+        0 ELSE t6.COUNT
+        END AS total
+        FROM
+        t5
+        LEFT JOIN t6 ON t5.f_level = t6.f_level
+        ),
+        s10 AS (
+        SELECT
+        t5.f_level AS LEVEL,
+        CASE
+
+        WHEN s6.COUNT IS NULL THEN
+        0 ELSE s6.COUNT
+        END AS online
+        FROM
+        t5
+        LEFT JOIN s6 ON t5.f_level = s6.f_level
+        ) SELECT
+        t10.LEVEL,
+        t10.total,
+        s10.online
+        FROM
+        t10
+        LEFT JOIN s10 ON t10.LEVEL = s10.LEVEL
+    </select>
 </mapper>

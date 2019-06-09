@@ -5,7 +5,7 @@ import com.largeScreen.api.base.Result;
 import com.largeScreen.api.base.ResultGenerator;
 import com.largeScreen.api.entity.JwtUser;
 import com.largeScreen.api.entity.LoginUser;
-import com.largeScreen.api.entity.User;
+import com.largeScreen.api.domain.User;
 import com.largeScreen.api.service.IUserRepository;
 import com.largeScreen.api.util.EntityUtil;
 import com.largeScreen.api.util.JwtTokenUtil;

@@ -1,7 +1,7 @@
 package com.largeScreen.api.service.impl;
 
 import com.largeScreen.api.entity.JwtUser;
-import com.largeScreen.api.entity.User;
+import com.largeScreen.api.domain.User;
 import com.largeScreen.api.service.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

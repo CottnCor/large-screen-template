@@ -18,12 +18,6 @@ import java.io.IOException;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @GetMapping("/login")
-    public String login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Result result = ResultGenerator.genSuccessResult("登陆成功！");
-        return GlobalUtil.PackResponse(result);
-    }
-
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Result result = ResultGenerator.genSuccessResult("已退出登陆！");

@@ -9,11 +9,11 @@ import java.util.Map;
 @Repository
 public interface CommonMapper {
 
-    List<Map> selectRegionByLevel(@Param("level") Integer level);
+    List<Map> selectRegionByLevel(@Param("level") Short level);
 
     List<Map> selectRegionByParent(@Param("xzqdm") String xzqdm);
 
-    List<Map> selectRegionByBounds(@Param("level") Integer level, @Param("wkt") String wkt);
+    List<Map> selectRegionByBounds(@Param("level") Short level, @Param("wkt") String wkt);
 
     Map selectRegionByXzqdm(@Param("xzqdm") String xzqdm);
 

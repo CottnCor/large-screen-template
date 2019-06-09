@@ -1,12 +1,12 @@
 package com.largeScreen.api.service.impl;
 
-import com.largeScreen.api.aop.DataSourceEnum;
 import com.largeScreen.api.mapper.CommonMapper;
-import com.largeScreen.api.annotations.DataSource;
 import com.largeScreen.api.service.ICommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +17,7 @@ public class CommonServiceImpl implements ICommonService {
     private CommonMapper commonMapper;
 
     @Override
-    @DataSource(DataSourceEnum.ZXJZ)
-    public List<Map> getRegionByLevel(Integer level) {
+    public List<Map> getRegionByLevel(Short level) {
         try {
             return commonMapper.selectRegionByLevel(level);
         } catch (Exception ex) {
@@ -36,7 +35,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
-    public List<Map> getRegionByBounds(Integer level, String wkt) {
+    public List<Map> getRegionByBounds(Short level, String wkt) {
         try {
             return commonMapper.selectRegionByBounds(level, wkt);
         } catch (Exception ex) {
@@ -66,6 +65,25 @@ public class CommonServiceImpl implements ICommonService {
     public Map getRegionTagByXzqdm(String xzqdm) {
         try {
             return commonMapper.selectRegionTagByXzqdm(xzqdm);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Map> getRegionGroups() {
+        List<Map> data = new ArrayList<>();
+        try {
+            List<Map> items;
+            List<Map> parents = this.getRegionByParent("-1");
+            for (Map record : parents) {
+                items = this.getRegionByParent(record.get("xzqdm").toString());
+                Map group = new HashMap();
+                group.putAll(record);
+                group.put("regions", items);
+                data.add(group);
+            }
+            return data;
         } catch (Exception ex) {
             return null;
         }

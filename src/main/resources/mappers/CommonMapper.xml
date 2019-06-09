@@ -2,110 +2,85 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.largeScreen.api.mapper.CommonMapper">
     <select id="selectRegionByLevel" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT
-            f_xzqdm AS xzqdm,
-            f_xzqmc AS xzqmc,
-            f_centerx AS x,
-            f_centery AS y,
-            f_level AS LEVEL,
-            f_pcode AS pcode
-        FROM
-            tb_region
-        WHERE
-            f_level = ${level}
-        ORDER BY
-            f_xzqdm;
+        SELECT f_xzqdm   AS xzqdm,
+               f_xzqmc   AS xzqmc,
+               f_centerx AS centerx,
+               f_centery AS centery,
+               f_level   AS level,
+               f_pcode   AS pcode
+        FROM tb_region
+        WHERE f_level = ${level}
+        ORDER BY f_xzqdm;
     </select>
     <select id="selectRegionByParent" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT
-            f_xzqdm AS xzqdm,
-            f_xzqmc AS xzqmc,
-            f_centerx AS x,
-            f_centery AS y,
-            f_level AS LEVEL,
-            f_pcode AS pcode
-        FROM
-            tb_region
-        WHERE
-            f_pcode = '${xzqdm}'
-        ORDER BY
-            f_xzqdm
+        SELECT f_xzqdm   AS xzqdm,
+               f_xzqmc   AS xzqmc,
+               f_centerx AS centerx,
+               f_centery AS centery,
+               f_level   AS level,
+               f_pcode   AS pcode
+        FROM tb_region
+        WHERE f_pcode = '${xzqdm}'
+        ORDER BY f_xzqdm
     </select>
     <select id="selectRegionByXzqdm" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT
-            f_xzqdm AS xzqdm,
-            f_xzqmc AS xzqmc,
-            f_centerx AS x,
-            f_centery AS y,
-            f_level AS LEVEL,
-            f_pcode AS pcode
-        FROM
-            tb_region
-        WHERE
-            f_pcode = '${xzqdm}'
-        ORDER BY
-            f_xzqdm
+        SELECT f_xzqdm   AS xzqdm,
+               f_xzqmc   AS xzqmc,
+               f_centerx AS centerx,
+               f_centery AS centery,
+               f_level   AS level,
+               f_pcode   AS pcode
+        FROM tb_region
+        WHERE f_pcode = '${xzqdm}'
+        ORDER BY f_xzqdm
     </select>
     <select id="selectRegionByBounds" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT
-            f_xzqdm AS xzqdm,
-            f_xzqmc AS xzqmc,
-            f_centerx AS x,
-            f_centery AS y,
-            f_level AS LEVEL,
-            f_pcode AS pcode
-        FROM
-            (
-                WITH xzq AS (
-                    SELECT
-                        f_xzqdm,
-                        f_xzqmc,
-                        f_centerx,
-                        f_centery,
-                        f_level,
-                        f_pcode,
-                        shape
-                    FROM
-                        tb_region
-                    WHERE
-                        f_xzqdm NOT IN ( SELECT f_xzqdm FROM tb_region WHERE shape IS NULL )
-                      AND f_level = ${level}
-                    ) SELECT
-                          xzq.f_xzqdm,
-                          xzq.f_xzqmc,
-                          xzq.f_centerx,
-                          xzq.f_centery,
-                          xzq.f_level,
-                          xzq.f_pcode
-                      FROM
-                          xzq
-                      WHERE
-                          ST_Contains ( ST_SetSRID ( st_geometryfromtext ( '${wkt}' ), 4490 ), ST_SetSRID ( ST_MAKEPOINT ( xzq.f_centerx, xzq.f_centery ), 4490 ) )) T
-        ORDER BY
-            f_xzqdm
+        SELECT f_xzqdm   AS xzqdm,
+               f_xzqmc   AS xzqmc,
+               f_centerx AS centerx,
+               f_centery AS centery,
+               f_level   AS level,
+               f_pcode   AS pcode
+        FROM (
+                 WITH xzq AS (
+                     SELECT f_xzqdm,
+                            f_xzqmc,
+                            f_centerx,
+                            f_centery,
+                            f_level,
+                            f_pcode,
+                            shape
+                     FROM tb_region
+                     WHERE f_xzqdm NOT IN (SELECT f_xzqdm FROM tb_region WHERE shape IS NULL)
+                       AND f_level = ${level}
+                     ) SELECT xzq.f_xzqdm,
+                              xzq.f_xzqmc,
+                              xzq.f_centerx,
+                              xzq.f_centery,
+                              xzq.f_level,
+                              xzq.f_pcode
+                       FROM xzq
+                       WHERE ST_Contains(ST_SetSRID(st_geometryfromtext('${wkt}'), 4490),
+                                         ST_SetSRID(ST_MAKEPOINT(xzq.f_centerx, xzq.f_centery), 4490))) T
+        ORDER BY f_xzqdm
     </select>
     <select id="selectRegionWktByXzqdm" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT
-            f_xzqdm AS xzqdm,
-            f_xzqmc AS xzqmc,
-            st_astext ( shape ) AS geom
-        FROM
-            tb_region
-        WHERE
-            f_xzqdm NOT IN ( SELECT f_xzqdm FROM tb_region WHERE shape IS NULL )
+        SELECT f_xzqdm          AS xzqdm,
+               f_xzqmc          AS xzqmc,
+               st_astext(shape) AS wkt
+        FROM tb_region
+        WHERE f_xzqdm NOT IN (SELECT f_xzqdm FROM tb_region WHERE shape IS NULL)
           AND f_xzqdm = '${xzqdm}'
     </select>
     <select id="selectRegionTagByXzqdm" resultType="java.util.Map" statementType="STATEMENT">
-        WITH t1 AS ( SELECT f_xzqmc, f_xzqdm FROM tb_region WHERE f_xzqdm = SUBSTRING (( '${xzqdm}' ), 1, 2 ) || '0000' ),
-             t2 AS ( SELECT f_xzqmc, f_xzqdm FROM tb_region WHERE f_xzqdm = SUBSTRING (( '${xzqdm}' ), 1, 4 ) || '00' ),
-             t3 AS ( SELECT f_xzqmc, f_xzqdm FROM tb_region WHERE f_xzqdm = '${xzqdm}' ) SELECT
-                                                                                             t3.f_xzqdm AS xzqdm,
-                                                                                             t1.f_xzqmc || t2.f_xzqmc || t3.f_xzqmc AS xzqmc
-        FROM
-            t1,
-            t2,
-            t3
-        ORDER BY
-            t3.f_xzqdm
+        WITH t1 AS (SELECT f_xzqmc, f_xzqdm FROM tb_region WHERE f_xzqdm = SUBSTRING(('${xzqdm}'), 1, 2) || '0000'),
+             t2 AS (SELECT f_xzqmc, f_xzqdm FROM tb_region WHERE f_xzqdm = SUBSTRING(('${xzqdm}'), 1, 4) || '00'),
+             t3 AS (SELECT f_xzqmc, f_xzqdm FROM tb_region WHERE f_xzqdm = '${xzqdm}')
+        SELECT t3.f_xzqdm                             AS xzqdm,
+               t1.f_xzqmc || t2.f_xzqmc || t3.f_xzqmc AS xzqmc
+        FROM t1,
+             t2,
+             t3
+        ORDER BY t3.f_xzqdm
     </select>
 </mapper>

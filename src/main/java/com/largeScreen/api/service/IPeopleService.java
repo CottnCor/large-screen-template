@@ -5,15 +5,23 @@ import java.util.Map;
 
 public interface IPeopleService {
 
-    Map getYxAccount(String userid);
+    Map getPeopleOverview(String type);
 
-    Map getUserInfo(String userid);
+    List<Map> getLevelCounts(String type);
 
-    Map getUserState(String userid);
-
-    Map getUserLocation(String userid);
+    List<Map> getPeopleCounts(String type, String xzqdm);
 
     List<Map> getUserTree();
 
-    Boolean addMessage(String userid);
+    Map getYxInfo(Long userid);
+
+    Map getUserInfo(Long userid);
+
+    Map getUserState(Long userid);
+
+    Map getUserCoords(Long userid);
+
+    List<Map> getPeopleCoords(Short level, String bounds);
+
+    Boolean sendMsg(Long userid, String msg);
 }

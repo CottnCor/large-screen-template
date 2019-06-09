@@ -9,15 +9,23 @@ import java.util.Map;
 @Repository
 public interface PeopleMapper {
 
-    Map selectYxAccount(@Param("userid") String userid);
+    Boolean insertMsg(@Param("userid")Long userid, @Param("msg")String msg);
 
-    Map selectUserInfo(@Param("userid") String userid);
+    Map selectYxInfo(@Param("userid")Long userid);
 
-    Map selectUserState(@Param("userid") String userid);
+    Map selectUserInfo(@Param("userid")Long userid);
 
-    Map selectUserLocation(@Param("userid") String userid);
+    Map selectUserState(@Param("userid")Long userid);
 
-    List<Map> selectUserTree();
+    List<Map> selectPeopleState();
 
-    Boolean insertMessage(@Param("userid") String userid);
+    Map selectUserCoords(@Param("userid")Long userid);
+
+    List<Map> selectPeopleCoords(@Param("wkt")String wkt);
+
+    List<Map> selectPeopleCluster(@Param("level")Short level, @Param("filter")String filter);
+
+    List<Map> selectPeopleCounts(@Param("type")String type, @Param("level")Short level, @Param("filter")String filter);
+
+    List<Map> selectLevelCounts(@Param("type")String type);
 }

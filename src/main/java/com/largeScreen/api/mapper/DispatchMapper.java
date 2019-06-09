@@ -27,7 +27,7 @@ public interface DispatchMapper {
 
     Boolean unlockDispatch(@Param("id") String id);
 
-    Boolean insertMessage();
+    Boolean insertMsg();
 
     List<Map> statisticDispatch(@Param("start") String start, @Param("end") String end);
 

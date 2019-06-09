@@ -17,7 +17,7 @@ public class CommonController {
     private ICommonService commonService;
 
     @GetMapping("/region/getRegionByLevel")
-    public String getRegionByLevel(@RequestParam(name="level",required=true)Integer level) {
+    public String getRegionByLevel(@RequestParam(name="level",required=true)Short level) {
         List<Map> maps = commonService.getRegionByLevel(level);
         return GlobalUtil.PackResponse(maps);
     }
@@ -29,7 +29,7 @@ public class CommonController {
     }
 
     @GetMapping("/region/getRegionByBounds")
-    public String getRegionByBounds(@RequestParam(name="level",required=true)Integer level, @RequestParam(name="wkt",required=true)String wkt) {
+    public String getRegionByBounds(@RequestParam(name="level",required=true)Short level, @RequestParam(name="wkt",required=true)String wkt) {
         List<Map> maps = commonService.getRegionByBounds(level, wkt);
         return GlobalUtil.PackResponse(maps);
     }
@@ -50,5 +50,11 @@ public class CommonController {
     public String getRegionTagByXzqdm(@RequestParam(name="xzqdm",required=true)String xzqdm) {
         Map map = commonService.getRegionTagByXzqdm(xzqdm);
         return GlobalUtil.PackResponse(map);
+    }
+
+    @GetMapping("/region/getRegionGroups")
+    public String getRegionGroups() {
+        List<Map> maps = commonService.getRegionGroups();
+        return GlobalUtil.PackResponse(maps);
     }
 }
