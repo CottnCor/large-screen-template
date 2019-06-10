@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.largeScreen.api.mapper.ProgressMapper">
-
+<mapper namespace="com.largeScreen.api.mapper.CloudQueryMapper">
+    <select id="selectCloudQueryOverview" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT COUNT(*)
+        FROM tb_cloud_query
+        WHERE f_querytime <![CDATA[ > ]]> '${startTime}'
+          AND f_querytime <![CDATA[ <= ]]> '${endTime}'
+    </select>
+    <select id="selectCloudQueryCounts" resultType="java.util.Map" statementType="STATEMENT">
+        WITH t0 AS (SELECT * FROM tb_cloud_query WHERE f_querytime <![CDATA[ > ]]> '${startTime}' AND f_querytime
+        <![CDATA[ <= ]]> '${endTime}'),
+        t1 AS (
+        SELECT COUNT
+        (*),
+        <choose>
+            <when test="level==1">
+                SUBSTRING( f_xzqdm, 0, 3 ) || '0000' AS f_xzqdm
+            </when>
+            <when test="level==2">
+                SUBSTRING( f_xzqdm, 0, 5 ) || '00' AS f_xzqdm
+            </when>
+            <when test="level==3">
+                f_xzqdm
+            </when>
+        </choose>
+        FROM t0
+        <choose>
+            <when test="level==2">
+                WHERE SUBSTRING ( f_xzqdm, 0, 3 ) || '0000' = '${xzqdm}'
+            </when>
+            <when test="level==3">
+                WHERE SUBSTRING ( f_xzqdm, 0, 5 ) || '00' = '${xzqdm}'
+            </when>
+        </choose>
+        GROUP BY
+        <choose>
+            <when test="level==1">
+                SUBSTRING(f_xzqdm, 0, 3) || '0000'
+            </when>
+            <when test="level==2">
+                SUBSTRING ( f_xzqdm, 0, 5 ) || '00'
+            </when>
+            <when test="level==3">
+                f_xzqdm
+            </when>
+        </choose>
+        ),
+        t2 AS (
+        SELECT t1.COUNT,
+        t1.f_xzqdm AS xzqdm,
+        tb_region.f_xzqmc AS xzqmc
+        FROM t1
+        LEFT JOIN tb_region ON t1.f_xzqdm = tb_region.f_xzqdm
+        )
+        SELECT *
+        FROM t2
+    </select>
 </mapper>

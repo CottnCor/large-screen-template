@@ -7,7 +7,6 @@ public class DataSourceContextHolder {
     private static final ThreadLocal<String> contextHolder = new ThreadLocal<>();
 
     public static void setDB(String dbType) {
-        System.out.println("切换到数据源：" + dbType);
         contextHolder.set(dbType);
     }
 
@@ -15,6 +14,5 @@ public class DataSourceContextHolder {
         return (contextHolder.get());
     }
 
-    public static void clearDB() {
-    }
+    public static void clearDB() {}
 }
