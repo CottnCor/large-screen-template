@@ -72,10 +72,10 @@
         WHERE T.f_userid = ${userid}
     </select>
     <select id="selectUserState" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT COUNT
-                   (f_userid) AS state
-        FROM tbsys_lock
-        WHERE f_createtime > (now() - '00:01:00' :: INTERVAL)
+        SELECT COUNT(f_userid)
+        FROM tbsys_user
+        WHERE f_updatetime > (now() - '00:01:01' :: INTERVAL)
+          AND f_islogin = 1
           AND f_userid = ${userid}
     </select>
     <select id="selectPeopleState" resultType="java.util.Map" statementType="STATEMENT">
@@ -93,7 +93,10 @@
              t6 AS (SELECT t5.f_xzqdm, t5.f_xzqmc, t4.f_userid, t4.f_username
                     FROM t4
                              LEFT JOIN t5 ON t5.f_xzqdm = t4.f_regregion),
-             t7 AS (SELECT t5.f_userid FROM tbsys_lock t5 WHERE t5.f_createtime > (now() - '00:01:00' :: INTERVAL)),
+             t7 AS (SELECT f_userid
+                    FROM tbsys_user
+                    WHERE f_updatetime > (now() - '00:01:01' :: INTERVAL)
+                      AND f_islogin = 1),
              t8 AS (SELECT f_xzqdm AS xzqdm, f_xzqmc AS xzqmc, f_userid AS userid, f_username AS username
                     FROM t6
                     WHERE f_userid IS NOT NULL),
@@ -151,10 +154,10 @@
                                                                                                                                     A.f_userid = b.f_userid
                                                                                                                                     )))) A
                               LEFT JOIN tbsys_user b ON A.f_userid = b.f_userid
-                     WHERE A.f_userid IN (
-                         SELECT f_userid
-                         FROM tbsys_lock
-                         WHERE f_createtime > (now() - '00:01:00' :: INTERVAL))
+                     WHERE A.f_userid IN (SELECT f_userid
+                                          FROM tbsys_user
+                                          WHERE f_updatetime > (now() - '00:01:01' :: INTERVAL)
+                                            AND f_islogin = 1)
                        AND ST_Contains(ST_SetSRID(st_geometryfromtext('${wkt}'), 4490),
                                        ST_SetSRID(ST_MAKEPOINT(A.f_lon, A.f_lat), 4490))) f1
         )
@@ -225,13 +228,8 @@
         ))))
         A LEFT JOIN tbsys_user b ON A.f_userid = b.f_userid
         WHERE
-        A.f_userid IN (
-        SELECT
-        f_userid
-        FROM
-        tbsys_lock
-        WHERE
-        f_createtime > ( now() - '00:01:00' :: INTERVAL ))),
+        A.f_userid IN (SELECT f_userid FROM tbsys_user WHERE f_updatetime > (now() - '00:01:01' :: INTERVAL) AND
+        f_islogin = 1)),
         cc AS (
         SELECT
         xzq.f_xzqdm
@@ -294,7 +292,7 @@
         t6 AS (
         <choose>
             <when test="type=='sdhc'">
-                SELECT t5.f_userid FROM tbsys_lock t5 WHERE t5.f_createtime > ( now() - '00:01:00' :: INTERVAL )
+                SELECT f_userid FROM tbsys_user WHERE f_updatetime > (now() - '00:01:01' :: INTERVAL) AND f_islogin = 1
             </when>
             <when test="type=='znfw'">
                 SELECT t5.f_userid FROM tb_user2yx t5
@@ -420,7 +418,7 @@
         s0 AS (
         <choose>
             <when test="type=='sdhc'">
-                SELECT f_userid FROM tbsys_lock WHERE f_createtime > ( now() - '00:01:00' :: INTERVAL )
+                SELECT f_userid FROM tbsys_user WHERE f_updatetime > (now() - '00:01:01' :: INTERVAL) AND f_islogin = 1
             </when>
             <when test="type=='znfw'">
                 SELECT f_userid FROM tb_user2yx
@@ -567,5 +565,113 @@
         FROM
         t10
         LEFT JOIN s10 ON t10.LEVEL = s10.LEVEL
+    </select>
+    <select id="selectPersonTime" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT COUNT(*)
+        FROM tb_devicetrack
+        WHERE f_updatetime <![CDATA[ > ]]> '${startTime}'
+          AND f_updatetime <![CDATA[ <= ]]> '${endTime}'
+    </select>
+    <select id="selectPersonTimeCounts" resultType="java.util.Map" statementType="STATEMENT">
+        WITH t0 AS (SELECT f_lon, f_lat, f_updatetime, f_userid FROM tb_devicetrack WHERE f_updatetime <![CDATA[ > ]]>
+        '${startTime}' AND f_updatetime
+        <![CDATA[ <= ]]> '${endTime}'),
+        t3 AS (
+        SELECT
+        t0.*,
+        t4.f_xzqdm,
+        t4.f_xzqmc
+        FROM
+        t0
+        LEFT JOIN ( SELECT * FROM tb_region WHERE f_level = 3 ) t4 ON ((
+        t0.f_lon <![CDATA[ > ]]> t4.f_xmin
+        )
+        AND ( t0.f_lon
+        <![CDATA[ < ]]> t4.f_xmax
+        )
+        AND ( t0.f_lat <![CDATA[ > ]]> t4.f_ymin )
+        AND ( t0.f_lat
+        <![CDATA[ < ]]> t4.f_ymax
+        ))
+        ),
+        t1 AS (
+        SELECT COUNT
+        (*),
+        <choose>
+            <when test="level==1">
+                SUBSTRING( f_xzqdm, 0, 3 ) || '0000' AS f_xzqdm
+            </when>
+            <when test="level==2">
+                SUBSTRING( f_xzqdm, 0, 5 ) || '00' AS f_xzqdm
+            </when>
+            <when test="level==3">
+                f_xzqdm
+            </when>
+        </choose>
+        FROM ( SELECT * FROM t3 WHERE f_xzqdm IS NOT NULL ) t3
+        <choose>
+            <when test="level==2">
+                WHERE SUBSTRING ( f_xzqdm, 0, 3 ) || '0000' = '${xzqdm}'
+            </when>
+            <when test="level==3">
+                WHERE SUBSTRING ( f_xzqdm, 0, 5 ) || '00' = '${xzqdm}'
+            </when>
+        </choose>
+        GROUP BY
+        <choose>
+            <when test="level==1">
+                SUBSTRING(f_xzqdm, 0, 3) || '0000'
+            </when>
+            <when test="level==2">
+                SUBSTRING ( f_xzqdm, 0, 5 ) || '00'
+            </when>
+            <when test="level==3">
+                f_xzqdm
+            </when>
+        </choose>
+        ),
+        t2 AS (
+        SELECT t1.COUNT,
+        t1.f_xzqdm AS xzqdm,
+        tb_region.f_xzqmc AS xzqmc
+        FROM t1
+        LEFT JOIN tb_region ON t1.f_xzqdm = tb_region.f_xzqdm
+        )
+        SELECT *
+        FROM t2
+    </select>
+    <select id="selectActivePerson" resultType="java.util.Map" statementType="STATEMENT">
+        WITH t0 AS (SELECT f_lon, f_lat, f_updatetime, f_userid FROM tb_devicetrack WHERE f_updatetime <![CDATA[ > ]]>
+        '${startTime}' AND f_updatetime
+        <![CDATA[ <= ]]> '${endTime}'),
+        t3 AS (
+        SELECT
+        t0.*,
+        t4.f_xzqdm,
+        t4.f_xzqmc
+        FROM
+        t0
+        LEFT JOIN ( SELECT * FROM tb_region WHERE f_level = 3 ) t4 ON ((
+        t0.f_lon <![CDATA[ > ]]> t4.f_xmin
+        )
+        AND ( t0.f_lon <![CDATA[ < ]]> t4.f_xmax )
+        AND ( t0.f_lat <![CDATA[ > ]]> t4.f_ymin )
+        AND ( t0.f_lat <![CDATA[ < ]]> t4.f_ymax ))
+        ),
+        t1 AS ( SELECT t3.*, t5.f_username FROM t3 LEFT JOIN tbsys_user t5 ON t3.f_userid = t5.f_userid ) SELECT
+        f_lon AS lng,
+        f_lat AS lat,
+        f_updatetime AS updatetime,
+        f_userid AS userid,
+        f_xzqdm AS xzqdm,
+        f_xzqmc AS xzqmc,
+        f_username AS NAME
+        FROM
+        t1 ORDER BY f_updatetime DESC
+        <choose>
+            <when test="limit>0 and page>0">
+                LIMIT ${limit} OFFSET ${limit} * (${page} - 1)
+            </when>
+        </choose>
     </select>
 </mapper>

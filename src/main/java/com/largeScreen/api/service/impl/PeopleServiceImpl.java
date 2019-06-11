@@ -258,6 +258,41 @@ public class PeopleServiceImpl implements IPeopleService {
         }
     }
 
+    @Override
+    public Map getPersonTime(String startTime, String endTime){
+        try {
+            return peopleMapper.selectPersonTime(startTime, endTime);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Map> getPersonTimeCounts(String startTime, String endTime, String xzqdm){
+        try {
+            Short level = 1;
+            if (xzqdm == null || xzqdm.isEmpty()) {
+                level = 1;
+            } else if ("0000".equals(xzqdm.substring(xzqdm.length() - 4))) {
+                level = 2;
+            } else if ("00".equals(xzqdm.substring(xzqdm.length() - 2))) {
+                level = 3;
+            }
+            return peopleMapper.selectPersonTimeCounts(startTime, endTime, level, xzqdm);
+        } catch (Exception ex){
+            return null;
+        }
+    }
+
+    @Override
+    public List<Map> getActivePerson(String startTime, String endTime, Short limit, Short page){
+        try {
+            return peopleMapper.selectActivePerson(startTime, endTime, limit, page);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
     private Map verifyUserLacation(String xzqdm) {
         try {
             Map<String, Object> verifyed = new HashMap<String, Object>();

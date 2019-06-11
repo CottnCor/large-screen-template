@@ -28,4 +28,10 @@ public interface PeopleMapper {
     List<Map> selectPeopleCounts(@Param("type")String type, @Param("level")Short level, @Param("filter")String filter);
 
     List<Map> selectLevelCounts(@Param("type")String type);
+
+    Map selectPersonTime(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    List<Map> selectPersonTimeCounts(@Param("startTime") String startTime, @Param("endTime") String endTime, @Param("level") Short level, @Param("xzqdm") String xzqdm);
+
+    List<Map> selectActivePerson(@Param("startTime") String startTime, @Param("endTime") String endTime, @Param("limit") Short limit,  @Param("page") Short page);
 }

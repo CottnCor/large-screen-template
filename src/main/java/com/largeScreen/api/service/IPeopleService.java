@@ -24,4 +24,10 @@ public interface IPeopleService {
     List<Map> getPeopleCoords(Short level, String bounds);
 
     Boolean sendMsg(Long userid, String msg);
+
+    Map getPersonTime(String startTime, String endTime);
+
+    List<Map> getPersonTimeCounts(String startTime, String endTime, String xzqdm);
+
+    List<Map> getActivePerson(String startTime, String endTime, Short limit, Short page);
 }

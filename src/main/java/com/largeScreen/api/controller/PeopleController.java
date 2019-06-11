@@ -69,6 +69,24 @@ public class PeopleController {
         return GlobalUtil.PackResponse(maps);
     }
 
+    @GetMapping("/getPersonTime")
+    public String getPersonTime(@RequestParam(name="startTime",required=true)String startTime, @RequestParam(name="endTime",required=true)String endTime) {
+        Map map = peopleService.getPersonTime(startTime, endTime);
+        return GlobalUtil.PackResponse(map);
+    }
+
+    @GetMapping("/getPersonTimeCounts")
+    public String getPersonTimeCounts(@RequestParam(name="startTime",required=true)String startTime, @RequestParam(name="endTime",required=true)String endTime, @RequestParam(name="xzqdm",required=false)String xzqdm) {
+        List<Map> maps = peopleService.getPersonTimeCounts(startTime, endTime, xzqdm);
+        return GlobalUtil.PackResponse(maps);
+    }
+
+    @GetMapping("/getActivePerson")
+    public String getActivePerson(@RequestParam(name="startTime",required=true)String startTime, @RequestParam(name="endTime",required=true)String endTime, @RequestParam(name="limit",required=true)Short limit, @RequestParam(name="page",required=true)Short page) {
+        List<Map> maps = peopleService.getActivePerson(startTime, endTime, limit, page);
+        return GlobalUtil.PackResponse(maps);
+    }
+
     @PostMapping("/addMessage")
     public String addMessage(@RequestParam(name="userid",required=true)Long userid, @RequestParam(name="msg",required=true)String msg) {
         Boolean status = peopleService.sendMsg(userid, msg);

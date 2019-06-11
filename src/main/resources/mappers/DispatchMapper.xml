@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.largeScreen.api.mapper.DispatchMapper">
+    <select id="selectObjectType" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT f_id AS id, f_name AS name, f_aliasname AS alias FROM tbcm_objectinfo WHERE f_is_support_video = 1
+    </select>
+    <select id="selectOrderDate" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT f_id AS id, f_fhrq AS fhDate FROM tb_video_calldate WHERE f_fhrq = '2019-05-23' AND f_state = 1 AND f_biz_id = '1017'
+    </select>
+    <select id="selectTimeSegments" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT f_id AS id, f_name AS quantum, f_begintime AS startTime, f_endtime AS endTime, f_yy_count AS orderCount FROM tb_video_calltime WHERE f_fhrq_id = '898fc0213bd94e81a6e87be4f4b0bbf4'
+    </select>
     <select id="selectDispatchOverview" resultType="java.util.Map" statementType="STATEMENT">
 
     </select>
@@ -8,7 +17,32 @@
 
     </select>
     <select id="selectDispatchList" resultType="java.util.Map" statementType="STATEMENT">
-
+        WITH t1 AS (
+            SELECT
+                f_id AS ID,
+                f_yy_id AS orderId,
+                f_tbbh AS tbbh,
+                f_layer_id AS layerId,
+                f_state AS STATE,
+                f_ddy_id AS ddyId,
+                f_wyry_id AS userId,
+                f_wyryname AS username,
+                f_serialnumber AS serialnumber,
+                f_conn_state AS connState,
+                f_islock AS islock
+            FROM
+                tb_video_takenumber
+            WHERE
+                f_fhsd_id = '200b177bbbfb44199815e2ce3a2cbcbf'
+              AND f_state = 2
+            ORDER BY
+                f_serialnumber
+        ) SELECT
+              t1.*,
+              ( CASE WHEN t2.f_userid IS NULL THEN 0 ELSE 1 END ) AS islogin
+        FROM
+            t1
+                LEFT JOIN ( SELECT f_userid FROM tbsys_user WHERE f_updatetime > ( now() - '00:01:01' :: INTERVAL ) AND f_islogin = 1 ) t2 ON t1.userId = t2.f_userid
     </select>
     <select id="selectDispatchInfo" resultType="java.util.Map" statementType="STATEMENT">
 
@@ -31,7 +65,5 @@
     <select id="statisticDispatch" resultType="java.util.Map" statementType="STATEMENT">
 
     </select>
-    <select id="selectTimeSegments" resultType="java.util.Map" statementType="STATEMENT">
 
-    </select>
 </mapper>
