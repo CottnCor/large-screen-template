@@ -8,13 +8,55 @@
         SELECT f_id AS id, f_fhrq AS fhDate FROM tb_video_calldate WHERE f_fhrq = '2019-05-23' AND f_state = 1 AND f_biz_id = '1017'
     </select>
     <select id="selectTimeSegments" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT f_id AS id, f_name AS quantum, f_begintime AS startTime, f_endtime AS endTime, f_yy_count AS orderCount FROM tb_video_calltime WHERE f_fhrq_id = '898fc0213bd94e81a6e87be4f4b0bbf4'
+        SELECT f_id AS id, f_name AS segment, f_begintime AS startTime, f_endtime AS endTime, f_yy_count AS orderCount
+        FROM tb_video_calltime
+        WHERE f_fhrq_id = '898fc0213bd94e81a6e87be4f4b0bbf4'
     </select>
     <select id="selectDispatchOverview" resultType="java.util.Map" statementType="STATEMENT">
-
+        SELECT COUNT(*), f_state AS state FROM tb_video_takenumber WHERE f_biz_id = '${bizId}' GROUP BY f_state ORDER BY f_state
     </select>
-    <select id="selectDispatchMap" resultType="java.util.Map" statementType="STATEMENT">
-
+    <select id="selectDispatchRecord" resultType="java.util.Map" statementType="STATEMENT">
+        WITH t0 AS (
+            SELECT
+                f_id AS ID,
+                f_begintime AS startTime,
+                f_endtime AS endTime,
+                f_wyry_id AS userId,
+                f_ddy_id AS ddyId,
+                f_roomid AS roomId,
+                f_filepath AS filePath,
+                f_biz_id AS BizId
+            FROM
+                tb_video_record
+            ORDER BY
+                f_endtime DESC
+            LIMIT 5 OFFSET 0
+        ),
+             t1 AS ( SELECT t0.*, t2.f_username FROM t0 LEFT JOIN tbsys_user t2 ON t0.userId = t2.f_userid ),
+             t3 AS (
+                 SELECT A.*
+                 FROM
+                     tb_video_devicestate A,
+                     ( SELECT f_recordid, MAX ( f_createtime ) f_createtime FROM tb_video_devicestate GROUP BY f_recordid ) b
+                 WHERE
+                     A.f_recordid = b.f_recordid
+                   AND A.f_createtime = b.f_createtime
+                 ORDER BY
+                     A.f_recordid
+             ),
+             t4 AS (
+                 SELECT
+                     t1.*,
+                     t3.f_X AS fromX,
+                     t3.f_y AS fromY,
+                     t3.f_angel AS angel
+                 FROM
+                     t1
+                         LEFT JOIN t3 ON t1.ID = t3.f_recordid
+             ) SELECT
+            *
+        FROM
+            t4
     </select>
     <select id="selectDispatchList" resultType="java.util.Map" statementType="STATEMENT">
         WITH t1 AS (
@@ -37,6 +79,7 @@
               AND f_state = 2
             ORDER BY
                 f_serialnumber
+            LIMIT 5 OFFSET 0
         ) SELECT
               t1.*,
               ( CASE WHEN t2.f_userid IS NULL THEN 0 ELSE 1 END ) AS islogin
@@ -47,23 +90,31 @@
     <select id="selectDispatchInfo" resultType="java.util.Map" statementType="STATEMENT">
 
     </select>
-    <select id="selectDispatchLocation" resultType="java.util.Map" statementType="STATEMENT">
-
+    <select id="selectDispatchCoords" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT
+            f_x AS x,
+            f_y AS y,
+            f_angel AS angel,
+            f_userid AS userid,
+            f_createtime AS createtime
+        FROM
+            tb_video_devicestate
+        WHERE
+            f_recordid = 'e6911e93db8d401481f25e716ab26d4a'
+        ORDER BY
+            f_createtime
     </select>
     <insert id="insertDispatchRecord" statementType="STATEMENT">
 
     </insert>
     <update id="updateDispatchState" statementType="STATEMENT">
-
+        UPDATE tb_video_takenumber SET f_state = ${state}, f_conn_state = ${connState} WHERE f_id = '${id}';
     </update>
     <update id="lockDispatch" statementType="STATEMENT">
-
+        UPDATE tb_video_takenumber SET f_islock = 1 WHERE f_id = '${id}';
     </update>
     <update id="unlockDispatch" statementType="STATEMENT">
-
+        UPDATE tb_video_takenumber SET f_islock = 0 WHERE f_id = '${id}';
     </update>
-    <select id="statisticDispatch" resultType="java.util.Map" statementType="STATEMENT">
-
-    </select>
 
 </mapper>

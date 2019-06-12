@@ -24,33 +24,33 @@ public class DispatchController {
     }
 
     @GetMapping("/getDispatchMap")
-    public String getDispatchMap(@RequestParam(name="limit",required=true)Integer limit,
-                                 @RequestParam(name="page",required=true)Integer page,
-                                 @RequestParam(name="start",required=true)String start,
-                                 @RequestParam(name="end",required=true)String end,
-                                 @RequestParam(name="state",required=true)Integer state) {
+    public String getDispatchMap(@RequestParam(name="limit")Integer limit,
+                                 @RequestParam(name="page")Integer page,
+                                 @RequestParam(name="start")String start,
+                                 @RequestParam(name="end")String end,
+                                 @RequestParam(name="state")Integer state) {
         List<Map> maps = dispatchService.getDispatchMap(limit, page, start, end, state);
         return GlobalUtil.PackResponse(maps);
     }
 
     @GetMapping("/getDispatchList")
-    public String getDispatchList(@RequestParam(name="limit",required=true)Integer limit,
-                                  @RequestParam(name="page",required=true)Integer page,
-                                  @RequestParam(name="start",required=true)String start,
-                                  @RequestParam(name="end",required=true)String end,
-                                  @RequestParam(name="state",required=true)Integer state) {
+    public String getDispatchList(@RequestParam(name="limit")Integer limit,
+                                  @RequestParam(name="page")Integer page,
+                                  @RequestParam(name="start")String start,
+                                  @RequestParam(name="end")String end,
+                                  @RequestParam(name="state")Integer state) {
         List<Map> maps = dispatchService.getDispatchList(limit, page, start, end, state);
         return GlobalUtil.PackResponse(maps);
     }
 
     @GetMapping("/getDispatchInfo")
-    public String getDispatchInfo(@RequestParam(name="id",required=true)String id) {
+    public String getDispatchInfo(@RequestParam(name="id")String id) {
         Map map = dispatchService.getDispatchInfo(id);
         return GlobalUtil.PackResponse(map);
     }
 
     @GetMapping("/getDispatchLocation")
-    public String getDispatchLocation(@RequestParam(name="id",required=true)String id) {
+    public String getDispatchLocation(@RequestParam(name="id")String id) {
         Map map = dispatchService.getDispatchLocation(id);
         return GlobalUtil.PackResponse(map);
     }
@@ -62,28 +62,28 @@ public class DispatchController {
     }
 
     @PostMapping("/setDispatchState")
-    public String setDispatchState(@RequestParam(name="id",required=true)String id,
-                                   @RequestParam(name="state",required=true)Integer state,
-                                   @RequestParam(name="connState",required=true)Integer connState) {
+    public String setDispatchState(@RequestParam(name="id")String id,
+                                   @RequestParam(name="state")Integer state,
+                                   @RequestParam(name="connState")Integer connState) {
         Boolean status = dispatchService.setDispatchState(id, state, connState);
         return GlobalUtil.PackResponse(status);
     }
 
     @PostMapping("/lockDispatch")
-    public String lockDispatch(@RequestParam(name="id",required=true)String id) {
+    public String lockDispatch(@RequestParam(name="id")String id) {
         Boolean status = dispatchService.lockDispatch(id);
         return GlobalUtil.PackResponse(status);
     }
 
     @PostMapping("/unlockDispatch")
-    public String unlockDispatch(@RequestParam(name="id",required=true)String id) {
+    public String unlockDispatch(@RequestParam(name="id")String id) {
         Boolean status = dispatchService.unlockDispatch(id);
         return GlobalUtil.PackResponse(status);
     }
 
     @GetMapping("/statisticDispatch")
-    public String statisticDispatch(@RequestParam(name="start",required=true)String start,
-                                    @RequestParam(name="end",required=true)String end) {
+    public String statisticDispatch(@RequestParam(name="start")String start,
+                                    @RequestParam(name="end")String end) {
         List<Map> maps = dispatchService.statisticDispatch(start, end);
         return GlobalUtil.PackResponse(maps);
     }

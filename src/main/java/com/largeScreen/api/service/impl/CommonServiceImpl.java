@@ -88,4 +88,57 @@ public class CommonServiceImpl implements ICommonService {
             return null;
         }
     }
+
+    @Override
+    public Map getStorageAddress(String id) {
+        try {
+            return commonMapper.selectStorageAddress(id);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public Map getJctbInfo(String layerId, String jctbId) {
+        try {
+            return commonMapper.selectJctbInfo(layerId, jctbId);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Map> getVisibleJctb(Double minx, Double miny, Double maxx, Double maxy) {
+        try {
+            List<Map> visibleJctb = new ArrayList<>();
+            List<Map> ybjzInfos = commonMapper.selectVisibleJctb(minx, miny, maxx, maxy, "1014");
+            List<Map> ccjzInfos = commonMapper.selectVisibleJctb(minx, miny, maxx, maxy, "1015");
+            List<Map> bcjzInfos = commonMapper.selectVisibleJctb(minx, miny, maxx, maxy, "1016");
+            List<Map> zxjzInfos = commonMapper.selectVisibleJctb(minx, miny, maxx, maxy, "1017");
+            visibleJctb.addAll(ybjzInfos);
+            visibleJctb.addAll(ccjzInfos);
+            visibleJctb.addAll(bcjzInfos);
+            visibleJctb.addAll(zxjzInfos);
+            return visibleJctb;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Map> getJctbAffix(String layerId, String jctbId) {
+        try {
+            return commonMapper.selectJctbAffix(layerId, jctbId);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public void editJctbInfo(Map record) {
+        try {
+            commonMapper.updateJctbInfo(record);
+        } catch (Exception ex) {
+        }
+    }
 }

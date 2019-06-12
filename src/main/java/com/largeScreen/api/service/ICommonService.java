@@ -18,4 +18,14 @@ public interface ICommonService {
     Map getRegionTagByXzqdm(String xzqdm);
 
     List<Map> getRegionGroups();
+
+    Map getStorageAddress(String id);
+
+    Map getJctbInfo(String layerId, String jctbId);
+
+    List<Map> getVisibleJctb(Double minx, Double miny, Double maxx, Double maxy);
+
+    List<Map> getJctbAffix(String layerId, String jctbId);
+
+    void editJctbInfo(Map record);
 }

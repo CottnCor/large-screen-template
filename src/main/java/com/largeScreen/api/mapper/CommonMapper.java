@@ -20,4 +20,14 @@ public interface CommonMapper {
     Map selectRegionWktByXzqdm(@Param("xzqdm") String xzqdm);
 
     Map selectRegionTagByXzqdm(@Param("xzqdm") String xzqdm);
+
+    Map selectStorageAddress(@Param("id") String xzqdm);
+
+    Map selectJctbInfo(@Param("layerId") String layerId, @Param("jctbId") String jctbId);
+
+    List<Map> selectVisibleJctb(@Param("minx") Double minx, @Param("miny") Double miny, @Param("maxx") Double maxx, @Param("maxy") Double maxy, @Param("layerId") String layerId);
+
+    List<Map> selectJctbAffix(@Param("layerId") String layerId, @Param("jctbId") String jctbId);
+
+    void updateJctbInfo(@Param("record") Map record);
 }

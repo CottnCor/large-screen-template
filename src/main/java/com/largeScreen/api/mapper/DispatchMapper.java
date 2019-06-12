@@ -9,11 +9,17 @@ import java.util.Map;
 @Repository
 public interface DispatchMapper {
 
-    List<Map> selectDispatchOverview();
+    List<Map> selectObjectType();
 
-    List<Map> selectDispatchMap(@Param("limit") Integer limit, @Param("page") Integer page, @Param("start") String start, @Param("end") String end, @Param("state") Integer state);
+    Map selectOrderDate(@Param("bizId") String bizId, @Param("date") String date);
 
-    List<Map> selectDispatchList(@Param("limit") Integer limit, @Param("page") Integer page, @Param("start") String start, @Param("end") String end, @Param("state") Integer state);
+    List<Map> selectTimeSegments(@Param("orderDateId") String orderDateId);
+
+    Map selectDispatchOverview(@Param("bizId") String bizId);
+
+    List<Map> selectDispatchMap(@Param("state") Short state, @Param("segmentId") String segmentId, @Param("limit") Short limit, @Param("page") Short page);
+
+    List<Map> selectDispatchList(@Param("state") Short state, @Param("segmentId") String segmentId, @Param("limit") Short limit, @Param("page") Short page);
 
     Map selectDispatchInfo(@Param("id") String id);
 
@@ -21,15 +27,11 @@ public interface DispatchMapper {
 
     Boolean insertDispatchRecord();
 
-    Boolean updateDispatchState(@Param("id") String id, @Param("state") Integer state, @Param("connState") Integer connState);
+    Boolean updateDispatchState(@Param("id") String id, @Param("state") Short state, @Param("connState") Short connState);
 
     Boolean lockDispatch(@Param("id") String id);
 
     Boolean unlockDispatch(@Param("id") String id);
 
-    Boolean insertMsg();
-
     List<Map> statisticDispatch(@Param("start") String start, @Param("end") String end);
-
-    List<Map> selectTimeSegments();
 }

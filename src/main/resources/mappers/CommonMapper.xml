@@ -83,4 +83,169 @@
              t3
         ORDER BY t3.f_xzqdm
     </select>
+    <select id="selectStorageAddress" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT f_address AS address FROM tbcm_servers WHERE f_id = '${id}'
+    </select>
+    <select id="selectJctbInfo" resultType="java.util.Map" statementType="STATEMENT">
+        select
+        f_id as id,
+        f_pid as pid,
+        f_tbybh as tbybh,
+        f_dcbz as dcbz,
+        f_xzqdm as xzqdm,
+        f_xzqmc as xzqmc,
+        f_tbmj as tbmj,
+        f_tblb as tblb,
+        f_qsdwmc as qsdwmc,
+        st_astext(f_shape) AS wkt,
+        <choose>
+            <when test="layerId=='1014'">
+                f_ybdl as ybdl,
+                f_ybms as ybms,
+                f_bz as bz,
+                f_bzsm as bzsm
+            </when>
+            <otherwise>
+                f_wyrddl as wyrddl,
+                f_sfjz as sfjz,
+                f_wjzlx as wjzlx,
+                f_wybz as wybz,
+                f_jzsm as jzsm,
+                f_jkbsm as jkbsm,
+                f_qsxz as qsxz,
+                f_dlbm as dlbm,
+                f_ypdl as ypdl,
+                f_nybz as nybz
+            </otherwise>
+        </choose>
+        from
+        <choose>
+            <when test="layerId=='1014'">
+                tb_sd_ybjz
+            </when>
+            <when test="layerId=='1015'">
+                tb_sd_ccjz
+            </when>
+            <when test="layerId=='1016'">
+                tb_sd_bcjz
+            </when>
+            <when test="layerId=='1017'">
+                tb_sd_zxjz
+            </when>
+            <when test="layerId=='1018'">
+                tb_bgdc_jctb
+            </when>
+            <when test="layerId=='1019'">
+                tb_bgdc_zddl
+            </when>
+        </choose>
+        WHERE f_id = '${jctbId}'
+    </select>
+    <select id="selectVisibleJctb" resultType="java.util.Map" statementType="STATEMENT">
+        select
+        f_id as id,
+        f_pid as pid,
+        f_tbybh as tbybh,
+        f_dcbz as dcbz,
+        f_xzqdm as xzqdm,
+        f_xzqmc as xzqmc,
+        f_tbmj as tbmj,
+        f_tblb as tblb,
+        f_qsdwmc as qsdwmc,
+        st_astext(f_shape) AS wkt,
+        <choose>
+            <when test="layerId=='1014'">
+                f_ybdl as ybdl,
+                f_ybms as ybms,
+                f_bz as bz,
+                f_bzsm as bzsm
+            </when>
+            <otherwise>
+                f_wyrddl as wyrddl,
+                f_sfjz as sfjz,
+                f_wjzlx as wjzlx,
+                f_wybz as wybz,
+                f_jzsm as jzsm,
+                f_jkbsm as jkbsm,
+                f_qsxz as qsxz,
+                f_dlbm as dlbm,
+                f_ypdl as ypdl,
+                f_nybz as nybz
+            </otherwise>
+        </choose>
+        from
+        <choose>
+            <when test="layerId=='1014'">
+                tb_sd_ybjz
+            </when>
+            <when test="layerId=='1015'">
+                tb_sd_ccjz
+            </when>
+            <when test="layerId=='1016'">
+                tb_sd_bcjz
+            </when>
+            <when test="layerId=='1017'">
+                tb_sd_zxjz
+            </when>
+            <when test="layerId=='1018'">
+                tb_bgdc_jctb
+            </when>
+            <when test="layerId=='1019'">
+                tb_bgdc_zddl
+            </when>
+        </choose>
+        where (f_centerx <![CDATA[ >= ]]> ${minx} and f_centerx <![CDATA[ <= ]]> ${maxx}) and (f_centery
+        <![CDATA[ >= ]]> ${miny} and f_centery <![CDATA[ <= ]]> ${maxy})
+    </select>
+    <select id="selectJctbAffix" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT
+            t1.f_id as id,
+            t1.f_type as type,
+            t1.f_angle as angle,
+            t1.f_xzqdm as xzqdm,
+            (t2.f_address || '/' || t1.f_filelocation) as filelocation,
+            (t2.f_address || '/' || t1.f_thumbfilepath) as thumbfilepath,
+            t1.f_phototype as phototype,
+            t1.f_userid as userid,
+            t1.f_username as name,
+            t1.f_mediasize as mediasize,
+            t1.f_jctbid as jctbid,
+            t1.f_layerid as layerid
+        FROM
+            tb_multimediadata t1 left join tbcm_servers t2 on t1.f_serverid = t2.f_id
+        WHERE
+            t1.f_jctbid = '${jctbId}' and t1.f_layerid = '${layerId}'
+    </select>
+    <update id="updateJctbInfo" statementType="STATEMENT">
+        UPDATE
+        <choose>
+            <when test="record.layerId=='1014'">
+                tb_sd_ybjz
+            </when>
+            <when test="record.layerId=='1015'">
+                tb_sd_ccjz
+            </when>
+            <when test="record.layerId=='1016'">
+                tb_sd_bcjz
+            </when>
+            <when test="record.layerId=='1017'">
+                tb_sd_zxjz
+            </when>
+            <when test="record.layerId=='1018'">
+                tb_bgdc_jctb
+            </when>
+            <when test="record.layerId=='1019'">
+                tb_bgdc_zddl
+            </when>
+        </choose>
+        <set>
+            f_wyrddl='${record.wyrddl}',
+            f_dcbz='${record.dcbz}',
+            f_sfjz='${record.sfjz}',
+            f_wjzlx='${record.wjzlx}',
+            f_wybz='${record.wybz}',
+            f_jzsm='${record.jzsm}'
+        </set>
+        where f_id='${record.jctbId}'
+    </update>
 </mapper>
