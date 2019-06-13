@@ -1,5 +1,7 @@
 package com.largeScreen.api.service.impl;
 
+import com.largeScreen.api.annotations.DataSource;
+import com.largeScreen.api.aop.DataSourceEnum;
 import com.largeScreen.api.mapper.DispatchMapper;
 import com.largeScreen.api.service.IDispatchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,101 +17,96 @@ public class DispatchServiceImpl implements IDispatchService {
     private DispatchMapper dispatchMapper;
 
     @Override
-    public List<Map> getDispatchOverview() {
+    @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getObjectType(){
         try {
-            return dispatchMapper.selectDispatchOverview();
-        } catch (Exception ex) {
+            return dispatchMapper.selectObjectType();
+        } catch (Exception ex){
             return null;
         }
     }
 
     @Override
-    public List<Map> getDispatchMap(Integer limit, Integer page, String start, String end, Integer state) {
+    @DataSource(DataSourceEnum.ZXJZ)
+    public Map getOrderDate(String bizId, String date){
         try {
-            return dispatchMapper.selectDispatchMap(limit, page, start, end, state);
-        } catch (Exception ex) {
+            return dispatchMapper.selectOrderDate(bizId, date);
+        } catch (Exception ex){
             return null;
         }
     }
 
     @Override
-    public List<Map> getDispatchList(Integer limit, Integer page, String start, String end, Integer state) {
+    @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getTimeSegments(String dateId){
         try {
-            return dispatchMapper.selectDispatchList(limit, page, start, end, state);
-        } catch (Exception ex) {
+            return dispatchMapper.selectTimeSegments(dateId);
+        } catch (Exception ex){
             return null;
         }
     }
 
     @Override
-    public Map getDispatchInfo(String id) {
+    @DataSource(DataSourceEnum.ZXJZ)
+    public Map getDispatchOverview(String bizId){
         try {
-            return dispatchMapper.selectDispatchInfo(id);
-        } catch (Exception ex) {
+            return dispatchMapper.selectDispatchOverview(bizId);
+        } catch (Exception ex){
             return null;
         }
     }
 
     @Override
-    public Map getDispatchLocation(String id) {
+    @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getDispatchRecord(Short limit, Short page){
         try {
-            return dispatchMapper.selectDispatchLocation(id);
-        } catch (Exception ex) {
+            return dispatchMapper.selectDispatchRecord(limit, page);
+        } catch (Exception ex){
             return null;
         }
     }
 
     @Override
-    public Boolean addDispatchRecord() {
+    @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getDispatchList(Short state, String segmentId, Short limit, Short page){
         try {
-            return dispatchMapper.insertDispatchRecord();
-        } catch (Exception ex) {
+            return dispatchMapper.selectDispatchList(state, segmentId, limit, page);
+        } catch (Exception ex){
             return null;
         }
     }
 
     @Override
-    public Boolean setDispatchState(String id, Integer state, Integer connState) {
+    @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getDispatchCoords(String id){
         try {
-            return dispatchMapper.updateDispatchState(id, state, connState);
-        } catch (Exception ex) {
+            return dispatchMapper.selectDispatchCoords(id);
+        } catch (Exception ex){
             return null;
         }
     }
 
     @Override
-    public Boolean lockDispatch(String id) {
-        try {
-            return dispatchMapper.lockDispatch(id);
-        } catch (Exception ex) {
-            return null;
-        }
+    @DataSource(DataSourceEnum.ZXJZ)
+    public void addDispatchRecord(Map record) throws Exception{
+        dispatchMapper.insertDispatchRecord(record);
     }
 
     @Override
-    public Boolean unlockDispatch(String id) {
-        try {
-            return dispatchMapper.unlockDispatch(id);
-        } catch (Exception ex) {
-            return null;
-        }
+    @DataSource(DataSourceEnum.ZXJZ)
+    public void editDispatchState(String id, Short state, Short connState) throws Exception{
+        dispatchMapper.updateDispatchState(id, state, connState);
     }
 
     @Override
-    public List<Map> statisticDispatch(String start, String end) {
-        try {
-            return dispatchMapper.statisticDispatch(start, end);
-        } catch (Exception ex) {
-            return null;
-        }
+    @DataSource(DataSourceEnum.ZXJZ)
+    public void lockDispatch(String id) throws Exception{
+        dispatchMapper.lockDispatch(id);
     }
 
     @Override
-    public List<Map> getTimeSegments() {
-        try {
-            return dispatchMapper.selectTimeSegments();
-        } catch (Exception ex) {
-            return null;
-        }
+    @DataSource(DataSourceEnum.ZXJZ)
+    public void unlockDispatch(String id) throws Exception{
+        dispatchMapper.unlockDispatch(id);
     }
 }

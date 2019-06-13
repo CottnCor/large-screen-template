@@ -1,7 +1,6 @@
 package com.largeScreen.api.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.JSONObject;
 import com.largeScreen.api.service.IDispatchService;
 import com.largeScreen.api.util.GlobalUtil;
 import org.springframework.web.bind.annotation.*;
@@ -17,81 +16,66 @@ public class DispatchController {
     @Resource
     private IDispatchService dispatchService;
 
-    @GetMapping("/getDispatchOverview")
-    public String getDispatchOverview() {
-        List<Map> maps = dispatchService.getDispatchOverview();
+    @GetMapping("/getObjectType")
+    public String getObjectType(){
+        List<Map> maps = dispatchService.getObjectType();
         return GlobalUtil.PackResponse(maps);
     }
 
-    @GetMapping("/getDispatchMap")
-    public String getDispatchMap(@RequestParam(name="limit")Integer limit,
-                                 @RequestParam(name="page")Integer page,
-                                 @RequestParam(name="start")String start,
-                                 @RequestParam(name="end")String end,
-                                 @RequestParam(name="state")Integer state) {
-        List<Map> maps = dispatchService.getDispatchMap(limit, page, start, end, state);
+    @GetMapping("/getOrderDate")
+    public String getOrderDate(@RequestParam(name="bizId")String bizId, @RequestParam(name="date")String date){
+        Map map = dispatchService.getOrderDate(bizId, date);
+        return GlobalUtil.PackResponse(map);
+    }
+
+    @GetMapping("/getTimeSegments")
+    public String getTimeSegments(@RequestParam(name="dateId")String dateId){
+        List<Map> maps = dispatchService.getTimeSegments(dateId);
+        return GlobalUtil.PackResponse(maps);
+    }
+    
+    @GetMapping("/getDispatchOverview")
+    public String getDispatchOverview(@RequestParam(name="bizId")String bizId){
+        Map map = dispatchService.getDispatchOverview(bizId);
+        return GlobalUtil.PackResponse(map);
+    }
+
+    @GetMapping("/getDispatchRecord")
+    public String getDispatchRecord(@RequestParam(name="limit")Short limit, @RequestParam(name="page")Short page){
+        List<Map> maps = dispatchService.getDispatchRecord(limit, page);
         return GlobalUtil.PackResponse(maps);
     }
 
     @GetMapping("/getDispatchList")
-    public String getDispatchList(@RequestParam(name="limit")Integer limit,
-                                  @RequestParam(name="page")Integer page,
-                                  @RequestParam(name="start")String start,
-                                  @RequestParam(name="end")String end,
-                                  @RequestParam(name="state")Integer state) {
-        List<Map> maps = dispatchService.getDispatchList(limit, page, start, end, state);
+    public String getDispatchList(@RequestParam(name="state")Short state, @RequestParam(name="segmentId")String segmentId, @RequestParam(name="limit")Short limit, @RequestParam(name="page")Short page){
+        List<Map> maps = dispatchService.getDispatchList(state, segmentId, limit, page);
         return GlobalUtil.PackResponse(maps);
     }
 
-    @GetMapping("/getDispatchInfo")
-    public String getDispatchInfo(@RequestParam(name="id")String id) {
-        Map map = dispatchService.getDispatchInfo(id);
-        return GlobalUtil.PackResponse(map);
-    }
-
-    @GetMapping("/getDispatchLocation")
-    public String getDispatchLocation(@RequestParam(name="id")String id) {
-        Map map = dispatchService.getDispatchLocation(id);
-        return GlobalUtil.PackResponse(map);
+    @GetMapping("/getDispatchCoords")
+    public String getDispatchCoords(@RequestParam(name="id")String id){
+        List<Map> maps = dispatchService.getDispatchCoords(id);
+        return GlobalUtil.PackResponse(maps);
     }
 
     @PostMapping("/addDispatchRecord")
-    public String addDispatchRecord() {
-        Boolean status = dispatchService.addDispatchRecord();
-        return GlobalUtil.PackResponse(status);
+    public void addDispatchRecord(@RequestParam(name="record")String record) throws Exception{
+        dispatchService.addDispatchRecord((Map) JSONObject.parse(record));
     }
 
-    @PostMapping("/setDispatchState")
-    public String setDispatchState(@RequestParam(name="id")String id,
-                                   @RequestParam(name="state")Integer state,
-                                   @RequestParam(name="connState")Integer connState) {
-        Boolean status = dispatchService.setDispatchState(id, state, connState);
-        return GlobalUtil.PackResponse(status);
+    @PostMapping("/editDispatchState")
+    public void editDispatchState(@RequestParam(name="id")String id, @RequestParam(name="state")Short state, @RequestParam(name="connState")Short connState) throws Exception{
+        dispatchService.editDispatchState(id, state, connState);
     }
 
     @PostMapping("/lockDispatch")
-    public String lockDispatch(@RequestParam(name="id")String id) {
-        Boolean status = dispatchService.lockDispatch(id);
-        return GlobalUtil.PackResponse(status);
+    public void lockDispatch(@RequestParam(name="id")String id) throws Exception{
+        dispatchService.lockDispatch(id);
     }
 
     @PostMapping("/unlockDispatch")
-    public String unlockDispatch(@RequestParam(name="id")String id) {
-        Boolean status = dispatchService.unlockDispatch(id);
-        return GlobalUtil.PackResponse(status);
-    }
-
-    @GetMapping("/statisticDispatch")
-    public String statisticDispatch(@RequestParam(name="start")String start,
-                                    @RequestParam(name="end")String end) {
-        List<Map> maps = dispatchService.statisticDispatch(start, end);
-        return GlobalUtil.PackResponse(maps);
-    }
-
-    @GetMapping("/getTimeSegments")
-    public String getTimeSegments() {
-        List<Map> maps = dispatchService.getTimeSegments();
-        return GlobalUtil.PackResponse(maps);
+    public void unlockDispatch(@RequestParam(name="id")String id) throws Exception{
+        dispatchService.unlockDispatch(id);
     }
 
 }

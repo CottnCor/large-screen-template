@@ -27,5 +27,7 @@ public interface ICommonService {
 
     List<Map> getJctbAffix(String layerId, String jctbId);
 
-    void editJctbInfo(Map record);
+    void addJctbAffix(Map record) throws Exception;
+
+    void editJctbInfo(Map record) throws Exception;
 }

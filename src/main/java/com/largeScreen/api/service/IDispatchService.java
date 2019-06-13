@@ -5,25 +5,25 @@ import java.util.Map;
 
 public interface IDispatchService {
 
-    List<Map> getDispatchOverview();
+    List<Map> getObjectType();
 
-    List<Map> getDispatchMap(Integer limit, Integer page, String start, String end, Integer state);
+    Map getOrderDate(String bizId, String date);
 
-    List<Map> getDispatchList(Integer limit, Integer page, String start, String end, Integer state);
+    List<Map> getTimeSegments(String dateId);
 
-    Map getDispatchInfo(String id);
+    Map getDispatchOverview(String bizId);
 
-    Map getDispatchLocation(String id);
+    List<Map> getDispatchRecord(Short limit, Short page);
 
-    Boolean addDispatchRecord();
+    List<Map> getDispatchList(Short state, String segmentId, Short limit, Short page);
 
-    Boolean setDispatchState(String id, Integer state, Integer connState);
+    List<Map> getDispatchCoords(String id);
 
-    Boolean lockDispatch(String id);
+    void addDispatchRecord(Map record) throws Exception;
 
-    Boolean unlockDispatch(String id);
+    void editDispatchState(String id, Short state, Short connState) throws Exception;
 
-    List<Map> statisticDispatch(String start, String end);
+    void lockDispatch(String id) throws Exception;
 
-    List<Map> getTimeSegments();
+    void unlockDispatch(String id) throws Exception;
 }

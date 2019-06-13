@@ -1,5 +1,7 @@
 package com.largeScreen.api.service.impl;
 
+import com.largeScreen.api.annotations.DataSource;
+import com.largeScreen.api.aop.DataSourceEnum;
 import com.largeScreen.api.mapper.CommonMapper;
 import com.largeScreen.api.service.ICommonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ public class CommonServiceImpl implements ICommonService {
     private CommonMapper commonMapper;
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getRegionByLevel(Short level) {
         try {
             return commonMapper.selectRegionByLevel(level);
@@ -26,6 +29,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getRegionByParent(String xzqdm) {
         try {
             return commonMapper.selectRegionByParent(xzqdm);
@@ -35,6 +39,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getRegionByBounds(Short level, String wkt) {
         try {
             return commonMapper.selectRegionByBounds(level, wkt);
@@ -44,6 +49,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getRegionByXzqdm(String xzqdm) {
         try {
             return commonMapper.selectRegionByXzqdm(xzqdm);
@@ -53,6 +59,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getRegionWktByXzqdm(String xzqdm) {
         try {
             return commonMapper.selectRegionWktByXzqdm(xzqdm);
@@ -62,6 +69,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getRegionTagByXzqdm(String xzqdm) {
         try {
             return commonMapper.selectRegionTagByXzqdm(xzqdm);
@@ -90,6 +98,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getStorageAddress(String id) {
         try {
             return commonMapper.selectStorageAddress(id);
@@ -99,6 +108,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getJctbInfo(String layerId, String jctbId) {
         try {
             return commonMapper.selectJctbInfo(layerId, jctbId);
@@ -108,6 +118,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getVisibleJctb(Double minx, Double miny, Double maxx, Double maxy) {
         try {
             List<Map> visibleJctb = new ArrayList<>();
@@ -126,6 +137,7 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getJctbAffix(String layerId, String jctbId) {
         try {
             return commonMapper.selectJctbAffix(layerId, jctbId);
@@ -135,10 +147,14 @@ public class CommonServiceImpl implements ICommonService {
     }
 
     @Override
-    public void editJctbInfo(Map record) {
-        try {
-            commonMapper.updateJctbInfo(record);
-        } catch (Exception ex) {
-        }
+    @DataSource(DataSourceEnum.ZXJZ)
+    public void addJctbAffix(Map record) throws Exception {
+        commonMapper.insertJctbAffix(record);
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
+    public void editJctbInfo(Map record) throws Exception {
+        commonMapper.updateJctbInfo(record);
     }
 }

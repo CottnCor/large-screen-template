@@ -29,5 +29,7 @@ public interface CommonMapper {
 
     List<Map> selectJctbAffix(@Param("layerId") String layerId, @Param("jctbId") String jctbId);
 
+    void insertJctbAffix(@Param("record") Map record);
+
     void updateJctbInfo(@Param("record") Map record);
 }

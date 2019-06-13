@@ -216,6 +216,9 @@
         WHERE
             t1.f_jctbid = '${jctbId}' and t1.f_layerid = '${layerId}'
     </select>
+    <insert id="insertJctbAffix" statementType="STATEMENT">
+
+    </insert>
     <update id="updateJctbInfo" statementType="STATEMENT">
         UPDATE
         <choose>

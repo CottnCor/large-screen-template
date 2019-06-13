@@ -5,12 +5,13 @@
         SELECT f_id AS id, f_name AS name, f_aliasname AS alias FROM tbcm_objectinfo WHERE f_is_support_video = 1
     </select>
     <select id="selectOrderDate" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT f_id AS id, f_fhrq AS fhDate FROM tb_video_calldate WHERE f_fhrq = '2019-05-23' AND f_state = 1 AND f_biz_id = '1017'
+        SELECT f_id AS id, f_fhrq AS fhDate FROM tb_video_calldate WHERE f_fhrq = '${date}' AND f_state = 1 AND f_biz_id = '${bizId}'
     </select>
     <select id="selectTimeSegments" resultType="java.util.Map" statementType="STATEMENT">
         SELECT f_id AS id, f_name AS segment, f_begintime AS startTime, f_endtime AS endTime, f_yy_count AS orderCount
         FROM tb_video_calltime
-        WHERE f_fhrq_id = '898fc0213bd94e81a6e87be4f4b0bbf4'
+        WHERE f_fhrq_id = '${dateId}'
+        ORDER BY f_begintime
     </select>
     <select id="selectDispatchOverview" resultType="java.util.Map" statementType="STATEMENT">
         SELECT COUNT(*), f_state AS state FROM tb_video_takenumber WHERE f_biz_id = '${bizId}' GROUP BY f_state ORDER BY f_state
@@ -25,12 +26,16 @@
                 f_ddy_id AS ddyId,
                 f_roomid AS roomId,
                 f_filepath AS filePath,
-                f_biz_id AS BizId
+                f_biz_id AS bizId
             FROM
                 tb_video_record
             ORDER BY
                 f_endtime DESC
-            LIMIT 5 OFFSET 0
+            <choose>
+                <when test="limit>0 and page>0">
+                    LIMIT ${limit} OFFSET ${limit} * (${page} - 1)
+                </when>
+            </choose>
         ),
              t1 AS ( SELECT t0.*, t2.f_username FROM t0 LEFT JOIN tbsys_user t2 ON t0.userId = t2.f_userid ),
              t3 AS (
@@ -75,20 +80,21 @@
             FROM
                 tb_video_takenumber
             WHERE
-                f_fhsd_id = '200b177bbbfb44199815e2ce3a2cbcbf'
-              AND f_state = 2
+                f_fhsd_id = '${segmentId}'
+              AND f_state = ${state}
             ORDER BY
                 f_serialnumber
-            LIMIT 5 OFFSET 0
+            <choose>
+                <when test="limit>0 and page>0">
+                    LIMIT ${limit} OFFSET ${limit} * (${page} - 1)
+                </when>
+            </choose>
         ) SELECT
               t1.*,
               ( CASE WHEN t2.f_userid IS NULL THEN 0 ELSE 1 END ) AS islogin
         FROM
             t1
                 LEFT JOIN ( SELECT f_userid FROM tbsys_user WHERE f_updatetime > ( now() - '00:01:01' :: INTERVAL ) AND f_islogin = 1 ) t2 ON t1.userId = t2.f_userid
-    </select>
-    <select id="selectDispatchInfo" resultType="java.util.Map" statementType="STATEMENT">
-
     </select>
     <select id="selectDispatchCoords" resultType="java.util.Map" statementType="STATEMENT">
         SELECT
@@ -100,7 +106,7 @@
         FROM
             tb_video_devicestate
         WHERE
-            f_recordid = 'e6911e93db8d401481f25e716ab26d4a'
+            f_recordid = '${id}'
         ORDER BY
             f_createtime
     </select>
@@ -116,5 +122,4 @@
     <update id="unlockDispatch" statementType="STATEMENT">
         UPDATE tb_video_takenumber SET f_islock = 0 WHERE f_id = '${id}';
     </update>
-
 </mapper>

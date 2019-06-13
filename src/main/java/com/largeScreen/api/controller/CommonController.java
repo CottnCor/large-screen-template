@@ -64,26 +64,31 @@ public class CommonController {
         return GlobalUtil.PackResponse(map);
     }
 
-    @GetMapping("/config/getStorageAddress")
+    @GetMapping("/spot/getJctbInfo")
     public String getJctbInfo(@RequestParam(name="layerId")String layerId, @RequestParam(name="jctbId")String jctbId) {
         Map map = commonService.getJctbInfo(layerId, jctbId);
         return GlobalUtil.PackResponse(map);
     }
 
-    @GetMapping("/config/getStorageAddress")
+    @GetMapping("/spot/getVisibleJctb")
     public String getVisibleJctb(@RequestParam(name="minx")Double minx, @RequestParam(name="miny")Double miny, @RequestParam(name="maxx")Double maxx, @RequestParam(name="maxy")Double maxy) {
         List<Map> maps = commonService.getVisibleJctb(minx, miny, maxx, maxy);
         return GlobalUtil.PackResponse(maps);
     }
 
-    @GetMapping("/config/getStorageAddress")
-    public String getJctbAffix(String layerId, String jctbId) {
+    @GetMapping("/spot/getJctbAffix")
+    public String getJctbAffix(@RequestParam(name="layerId")String layerId, @RequestParam(name="jctbId")String jctbId) {
         List<Map> maps = commonService.getJctbAffix(layerId, jctbId);
         return GlobalUtil.PackResponse(maps);
     }
 
-    @GetMapping("/config/getStorageAddress")
-    public void editJctbInfo(@RequestParam(name="record")String record) {
+    @PostMapping("/spot/addJctbAffix")
+    public void addJctbAffix(@RequestParam(name="record")String record) throws Exception {
+        commonService.addJctbAffix((Map) JSONObject.parse(record));
+    }
+
+    @PostMapping("/spot/editJctbInfo")
+    public void editJctbInfo(@RequestParam(name="record")String record) throws Exception {
         commonService.editJctbInfo((Map) JSONObject.parse(record));
     }
 }

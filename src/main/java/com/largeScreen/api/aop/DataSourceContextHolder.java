@@ -7,6 +7,7 @@ public class DataSourceContextHolder {
     private static final ThreadLocal<String> contextHolder = new ThreadLocal<>();
 
     public static void setDB(String dbType) {
+        System.out.println("【dataSource changed】:" + dbType);
         contextHolder.set(dbType);
     }
 

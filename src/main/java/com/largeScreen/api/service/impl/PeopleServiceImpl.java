@@ -52,6 +52,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getLevelCounts(String type) {
         try {
             return peopleMapper.selectLevelCounts(type);
@@ -76,6 +77,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getUserTree() {
         try {
             Short level = 1;
@@ -150,6 +152,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getPeopleCoords(Short level, String bounds) {
         try {
             List<Map> result = new ArrayList<>();
@@ -196,7 +199,7 @@ public class PeopleServiceImpl implements IPeopleService {
             }
             for (Map item : temp) {
                 if (Integer.parseInt(item.get("count").toString()) == 1) {
-                    Map<String, Object> verifyed = verifyUserLacation(item.get("xzqdm").toString());
+                    Map<String, Object> verifyed = getUsersCoords(item.get("xzqdm").toString());
                     if (verifyed != null) {
                         verifyed.put("count", 1);
                         verifyed.put("xzqdm", item.get("xzqdm").toString());
@@ -214,6 +217,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getYxInfo(Long userid) {
         try {
             return peopleMapper.selectYxInfo(userid);
@@ -223,6 +227,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getUserInfo(Long userid) {
         try {
             return peopleMapper.selectUserInfo(userid);
@@ -232,6 +237,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getUserState(Long userid) {
         try {
             return peopleMapper.selectUserState(userid);
@@ -241,6 +247,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getUserCoords(Long userid) {
         try {
             return peopleMapper.selectUserCoords(userid);
@@ -250,6 +257,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Boolean sendMsg(Long userid, String msg) {
         try {
             return peopleMapper.insertMsg(userid, msg);
@@ -259,6 +267,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getPersonTime(String startTime, String endTime){
         try {
             return peopleMapper.selectPersonTime(startTime, endTime);
@@ -268,6 +277,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getPersonTimeCounts(String startTime, String endTime, String xzqdm){
         try {
             Short level = 1;
@@ -285,6 +295,7 @@ public class PeopleServiceImpl implements IPeopleService {
     }
 
     @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getActivePerson(String startTime, String endTime, Short limit, Short page){
         try {
             return peopleMapper.selectActivePerson(startTime, endTime, limit, page);
@@ -293,7 +304,8 @@ public class PeopleServiceImpl implements IPeopleService {
         }
     }
 
-    private Map verifyUserLacation(String xzqdm) {
+    @DataSource(DataSourceEnum.ZXJZ)
+    private Map getUsersCoords(String xzqdm) {
         try {
             Map<String, Object> verifyed = new HashMap<String, Object>();
             List<Map> users = new ArrayList<>();
@@ -335,6 +347,7 @@ public class PeopleServiceImpl implements IPeopleService {
         }
     }
 
+    @DataSource(DataSourceEnum.ZXJZ)
     private List<Map> getSdhcPeopleCounts(String xzqdm) {
         try {
             Short level = 1;
