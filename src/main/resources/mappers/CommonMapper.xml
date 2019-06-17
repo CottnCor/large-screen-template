@@ -34,6 +34,39 @@
         WHERE f_pcode = '${xzqdm}'
         ORDER BY f_xzqdm
     </select>
+    <select id="selectRegionByCoord" resultType="java.util.Map" statementType="STATEMENT">
+        WITH A AS (
+        SELECT
+        f_xzqdm,
+        f_xzqmc,
+        f_centerx,
+        f_centery,
+        f_level,
+        f_pcode,
+        shape
+        FROM
+        tb_region
+        WHERE
+        ${lng} <![CDATA[ > ]]> f_xmin
+        AND ${lng} <![CDATA[ <= ]]> f_xmax
+                         AND ${lat} <![CDATA[ > ]]> f_ymin
+        AND ${lat} <![CDATA[ <= ]]> f_ymax
+                       AND f_level = 3
+        ),
+        B AS ( SELECT f_xzqdm, f_xzqmc, f_centerx, f_centery, f_level, f_pcode, st_astext ( shape ) AS wkt FROM A ) SELECT
+        f_xzqdm AS xzqdm,
+        f_xzqmc AS xzqmc,
+        f_centerx AS centerx,
+        f_centery AS centery,
+        f_level AS LEVEL,
+        f_pcode AS pcode
+        FROM
+        B
+        WHERE
+        ST_Contains (
+        ST_SetSRID ( st_geometryfromtext ( wkt ), 4490 ),
+        ST_SetSRID ( ST_MAKEPOINT ( ${lng}, ${lat} ), 4490 ))
+    </select>
     <select id="selectRegionByBounds" resultType="java.util.Map" statementType="STATEMENT">
         SELECT f_xzqdm   AS xzqdm,
                f_xzqmc   AS xzqmc,

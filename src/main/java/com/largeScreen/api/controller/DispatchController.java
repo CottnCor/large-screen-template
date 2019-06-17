@@ -36,8 +36,8 @@ public class DispatchController {
     
     @GetMapping("/getDispatchOverview")
     public String getDispatchOverview(@RequestParam(name="bizId")String bizId){
-        Map map = dispatchService.getDispatchOverview(bizId);
-        return GlobalUtil.PackResponse(map);
+        List<Map> maps = dispatchService.getDispatchOverview(bizId);
+        return GlobalUtil.PackResponse(maps);
     }
 
     @GetMapping("/getDispatchRecord")

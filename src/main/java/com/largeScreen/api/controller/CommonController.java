@@ -34,6 +34,14 @@ public class CommonController {
         return GlobalUtil.PackResponse(maps);
     }
 
+    @GetMapping("/region/getRegionByCoord")
+    public String getRegionByCoord(@RequestParam(name="lng")Double lng, @RequestParam(name="lat")Double lat) {
+        Map map = commonService.getRegionByCoord(lng, lat);
+        return GlobalUtil.PackResponse(map);
+    }
+
+
+
     @GetMapping("/region/getRegionByXzqdm")
     public String getRegionByXzqdm(@RequestParam(name="xzqdm")String xzqdm) {
         Map map = commonService.getRegionByXzqdm(xzqdm);

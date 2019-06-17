@@ -15,7 +15,7 @@ public interface DispatchMapper {
 
     List<Map> selectTimeSegments(@Param("dateId") String dateId);
 
-    Map selectDispatchOverview(@Param("bizId") String bizId);
+    List<Map> selectDispatchOverview(@Param("bizId") String bizId);
 
     List<Map> selectDispatchRecord(@Param("limit") Short limit, @Param("page") Short page);
 

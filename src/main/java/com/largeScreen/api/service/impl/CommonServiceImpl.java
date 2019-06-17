@@ -50,6 +50,16 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
+    public Map getRegionByCoord(Double lng, Double lat) {
+        try {
+            return commonMapper.selectRegionByCoord(lng, lat);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getRegionByXzqdm(String xzqdm) {
         try {
             return commonMapper.selectRegionByXzqdm(xzqdm);

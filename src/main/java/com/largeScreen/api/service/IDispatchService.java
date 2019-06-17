@@ -11,7 +11,7 @@ public interface IDispatchService {
 
     List<Map> getTimeSegments(String dateId);
 
-    Map getDispatchOverview(String bizId);
+    List<Map> getDispatchOverview(String bizId);
 
     List<Map> getDispatchRecord(Short limit, Short page);
 

@@ -48,7 +48,7 @@ public class DispatchServiceImpl implements IDispatchService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public Map getDispatchOverview(String bizId){
+    public List<Map> getDispatchOverview(String bizId){
         try {
             return dispatchMapper.selectDispatchOverview(bizId);
         } catch (Exception ex){

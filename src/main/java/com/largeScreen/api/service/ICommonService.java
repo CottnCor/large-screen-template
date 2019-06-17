@@ -11,6 +11,8 @@ public interface ICommonService {
 
     List<Map> getRegionByBounds(Short level, String wkt);
 
+    Map getRegionByCoord(Double lng, Double lat);
+
     Map getRegionByXzqdm(String xzqdm);
 
     Map getRegionWktByXzqdm(String xzqdm);

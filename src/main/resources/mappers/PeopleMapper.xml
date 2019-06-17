@@ -587,11 +587,11 @@
         t0.f_lon <![CDATA[ > ]]> t4.f_xmin
         )
         AND ( t0.f_lon
-        <![CDATA[ < ]]> t4.f_xmax
+        <![CDATA[ <= ]]> t4.f_xmax
         )
         AND ( t0.f_lat <![CDATA[ > ]]> t4.f_ymin )
         AND ( t0.f_lat
-        <![CDATA[ < ]]> t4.f_ymax
+        <![CDATA[ <= ]]> t4.f_ymax
         ))
         ),
         t1 AS (

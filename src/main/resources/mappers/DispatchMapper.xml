@@ -5,7 +5,7 @@
         SELECT f_id AS id, f_name AS name, f_aliasname AS alias FROM tbcm_objectinfo WHERE f_is_support_video = 1
     </select>
     <select id="selectOrderDate" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT f_id AS id, f_fhrq AS fhDate FROM tb_video_calldate WHERE f_fhrq = '${date}' AND f_state = 1 AND f_biz_id = '${bizId}'
+        SELECT f_id AS id, f_fhrq AS day FROM tb_video_calldate WHERE f_fhrq = '${date}' AND f_state = 1 AND f_biz_id = '${bizId}'
     </select>
     <select id="selectTimeSegments" resultType="java.util.Map" statementType="STATEMENT">
         SELECT f_id AS id, f_name AS segment, f_begintime AS startTime, f_endtime AS endTime, f_yy_count AS orderCount
@@ -37,7 +37,7 @@
                 </when>
             </choose>
         ),
-             t1 AS ( SELECT t0.*, t2.f_username FROM t0 LEFT JOIN tbsys_user t2 ON t0.userId = t2.f_userid ),
+             t1 AS ( SELECT t0.*, t2.f_username AS username FROM t0 LEFT JOIN tbsys_user t2 ON t0.userId = t2.f_userid ),
              t3 AS (
                  SELECT A.*
                  FROM

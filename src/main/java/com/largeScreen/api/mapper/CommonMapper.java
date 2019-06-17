@@ -15,6 +15,8 @@ public interface CommonMapper {
 
     List<Map> selectRegionByBounds(@Param("level") Short level, @Param("wkt") String wkt);
 
+    Map selectRegionByCoord(@Param("lng") Double lng, @Param("lat") Double lat);
+
     Map selectRegionByXzqdm(@Param("xzqdm") String xzqdm);
 
     Map selectRegionWktByXzqdm(@Param("xzqdm") String xzqdm);
