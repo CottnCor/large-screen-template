@@ -2,6 +2,7 @@ package com.largeScreen.api.service.impl;
 
 import com.largeScreen.api.annotations.DataSource;
 import com.largeScreen.api.aop.DataSourceEnum;
+import com.largeScreen.api.mapper.CommonMapper;
 import com.largeScreen.api.mapper.DispatchMapper;
 import com.largeScreen.api.service.IDispatchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class DispatchServiceImpl implements IDispatchService {
 
     @Autowired
     private DispatchMapper dispatchMapper;
+
+    @Autowired
+    private CommonMapper commonMapper;
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
@@ -60,7 +64,14 @@ public class DispatchServiceImpl implements IDispatchService {
     @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getDispatchRecord(Short limit, Short page){
         try {
-            return dispatchMapper.selectDispatchRecord(limit, page);
+            List<Map> dispatchRecord = dispatchMapper.selectDispatchRecord(limit, page);
+            for (Map record : dispatchRecord) {
+                Map  regionTag = commonMapper.selectRegionTagByXzqdm(record.get("to_xzqdm").toString());
+                record.put("to_xzqmc", regionTag.get("xzqmc").toString());
+                regionTag = commonMapper.selectRegionTagByXzqdm(record.get("from_xzqdm").toString());
+                record.put("from_xzqmc", regionTag.get("xzqmc").toString());
+            }
+            return dispatchRecord;
         } catch (Exception ex){
             return null;
         }
