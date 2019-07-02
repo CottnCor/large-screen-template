@@ -14,7 +14,7 @@ target
 *.7z
 *.rar
 *.iml
-*.properties
+application-*.properties
 
 # local env files
 .env.local
