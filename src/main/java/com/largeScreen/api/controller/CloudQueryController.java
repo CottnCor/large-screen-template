@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/cloudquery")
+@RequestMapping(value = "/api/cloudquery", produces = { "application/json;charset=UTF-8" })
 public class CloudQueryController {
 
     @Resource

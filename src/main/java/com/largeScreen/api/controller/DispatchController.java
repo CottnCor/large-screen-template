@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/dispatch")
+@RequestMapping(value = "/api/dispatch", produces = { "application/json;charset=UTF-8" })
 public class DispatchController {
 
     @Resource

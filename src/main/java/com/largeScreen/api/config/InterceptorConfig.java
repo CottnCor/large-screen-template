@@ -3,10 +3,10 @@ package com.largeScreen.api.config;
 import com.largeScreen.api.interceptor.CorsInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 @Configuration
-public class InterceptorConfig extends WebMvcConfigurerAdapter {
+public class InterceptorConfig extends WebMvcConfigurationSupport {
 
     public CorsInterceptor corsInterceptor() {
         return new CorsInterceptor();

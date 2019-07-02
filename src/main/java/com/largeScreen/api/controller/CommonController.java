@@ -10,7 +10,7 @@ import java.util.Map;
 import com.largeScreen.api.service.ICommonService;
 
 @RestController
-@RequestMapping("/api/common")
+@RequestMapping(value = "/api/common", produces = { "application/json;charset=UTF-8" })
 public class CommonController {
 
     @Resource
@@ -39,8 +39,6 @@ public class CommonController {
         Map map = commonService.getRegionByCoord(lng, lat);
         return GlobalUtil.PackResponse(map);
     }
-
-
 
     @GetMapping("/region/getRegionByXzqdm")
     public String getRegionByXzqdm(@RequestParam(name="xzqdm")String xzqdm) {

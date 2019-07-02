@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(value = "/auth", produces = { "application/json;charset=UTF-8" })
 public class AuthController {
 
     @GetMapping("/logout")

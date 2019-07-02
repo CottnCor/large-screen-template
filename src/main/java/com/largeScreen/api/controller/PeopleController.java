@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/people")
+@RequestMapping(value = "/api/people", produces = { "application/json;charset=UTF-8" })
 public class PeopleController {
 
     @Resource

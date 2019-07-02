@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/api/storage")
+@RequestMapping(value = "/api/storage", produces = { "application/json;charset=UTF-8" })
 public class StorageControllor {
 
     @Resource
