@@ -79,7 +79,7 @@ public class DispatchServiceImpl implements IDispatchService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public List<Map> getDispatchList(Short state, String segmentId, Short limit, Short page){
+    public List<Map> getDispatchList(List<Short> state, String segmentId, Short limit, Short page){
         try {
             return dispatchMapper.selectDispatchList(state, segmentId, limit, page);
         } catch (Exception ex){

@@ -15,7 +15,7 @@ public interface IDispatchService {
 
     List<Map> getDispatchRecord(Short limit, Short page);
 
-    List<Map> getDispatchList(Short state, String segmentId, Short limit, Short page);
+    List<Map> getDispatchList(List<Short> state, String segmentId, Short limit, Short page);
 
     List<Map> getDispatchCoords(String id);
 

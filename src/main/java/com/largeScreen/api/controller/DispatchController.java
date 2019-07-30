@@ -1,11 +1,14 @@
 package com.largeScreen.api.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.largeScreen.api.service.IDispatchService;
 import com.largeScreen.api.util.GlobalUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +50,12 @@ public class DispatchController {
     }
 
     @GetMapping("/getDispatchList")
-    public String getDispatchList(@RequestParam(name="state")Short state, @RequestParam(name="segmentId")String segmentId, @RequestParam(name="limit")Short limit, @RequestParam(name="page")Short page){
+    public String getDispatchList(@RequestParam(name="filter")String filter) throws UnsupportedEncodingException {
+        filter = URLDecoder.decode(filter, "utf-8");
+        Short page = JSON.parseObject(filter).getShort("page");
+        Short limit = JSON.parseObject(filter).getShort("limit");
+        String segmentId = JSON.parseObject(filter).getString("segmentId");
+        List<Short> state = JSON.parseObject(filter).getJSONArray("state").toJavaList(Short.class);
         List<Map> maps = dispatchService.getDispatchList(state, segmentId, limit, page);
         return GlobalUtil.PackResponse(maps);
     }

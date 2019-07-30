@@ -105,12 +105,19 @@
                 f_wyryname AS username,
                 f_serialnumber AS serialnumber,
                 f_conn_state AS connState,
-                f_islock AS islock
+                f_islock AS islock,
+                f_xzqdm AS xzqdm
             FROM
                 tb_video_takenumber
             WHERE
                 f_fhsd_id = '${segmentId}'
-              AND f_state = ${state}
+                <choose>
+                    <when test="state!=null">
+                        <foreach item="item" collection="state" open=" AND (" close=")" separator=" OR ">
+                            f_state = ${item}
+                        </foreach>
+                    </when>
+                </choose>
             ORDER BY
                 f_serialnumber
             <choose>
