@@ -5,11 +5,15 @@
 
     </insert>
     <select id="selectYxInfo" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT f_userid AS userid,
-               f_accid  AS accid,
-               f_status AS status
-        FROM tb_user2yx
-        WHERE f_userid = ${userid}
+        WITH A AS (SELECT f_userid AS userid, f_accid AS account, f_status AS status
+                   FROM tb_user2yx
+                   WHERE f_userid = ${userid})
+        SELECT A
+                   .*,
+               B.f_name  AS username,
+               B.f_token AS token
+        FROM A
+                 LEFT JOIN tb_yxuser B ON A.account = B.f_accid
     </select>
     <select id="selectUserInfo" resultType="java.util.Map" statementType="STATEMENT">
         SELECT T.f_userid                                             as userid,
