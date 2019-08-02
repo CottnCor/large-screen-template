@@ -23,6 +23,8 @@ public interface DispatchMapper {
 
     List<Map> selectDispatchCoords(@Param("id") String id);
 
+    Map selectDispatchInfo(@Param("id") String id);
+
     Boolean insertDispatchRecord(@Param("record") Map record);
 
     Boolean updateDispatchState(@Param("id") String id, @Param("state") Short state, @Param("connState") Short connState);

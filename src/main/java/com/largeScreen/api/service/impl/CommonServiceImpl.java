@@ -119,9 +119,9 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public Map getJctbInfo(String layerId, String jctbId) {
+    public Map getJctbInfo(String layerId, String tbbh, String xzqdm) {
         try {
-            return commonMapper.selectJctbInfo(layerId, jctbId);
+            return commonMapper.selectJctbInfo(layerId, tbbh, xzqdm);
         } catch (Exception ex) {
             return null;
         }

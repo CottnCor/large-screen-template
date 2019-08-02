@@ -99,6 +99,16 @@ public class DispatchServiceImpl implements IDispatchService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
+    public Map getDispatchInfo(String id){
+        try {
+            return dispatchMapper.selectDispatchInfo(id);
+        } catch (Exception ex){
+            return null;
+        }
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public void addDispatchRecord(Map record) throws Exception{
         dispatchMapper.insertDispatchRecord(record);
     }

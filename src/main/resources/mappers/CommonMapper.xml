@@ -172,7 +172,7 @@
                 tb_bgdc_zddl
             </when>
         </choose>
-        WHERE f_id = '${jctbId}'
+        WHERE f_xzqdm = '${xzqdm}' AND f_tbybh = '${tbbh}'
     </select>
     <select id="selectVisibleJctb" resultType="java.util.Map" statementType="STATEMENT">
         select

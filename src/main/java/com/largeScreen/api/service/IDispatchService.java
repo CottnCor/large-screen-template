@@ -19,6 +19,8 @@ public interface IDispatchService {
 
     List<Map> getDispatchCoords(String id);
 
+    Map getDispatchInfo(String id);
+
     void addDispatchRecord(Map record) throws Exception;
 
     void editDispatchState(String id, Short state, Short connState) throws Exception;

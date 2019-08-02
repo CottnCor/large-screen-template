@@ -23,7 +23,7 @@ public interface ICommonService {
 
     Map getStorageAddress(String id);
 
-    Map getJctbInfo(String layerId, String jctbId);
+    Map getJctbInfo(String layerId, String tbbh, String xzqdm);
 
     List<Map> getVisibleJctb(Double minx, Double miny, Double maxx, Double maxy);
 

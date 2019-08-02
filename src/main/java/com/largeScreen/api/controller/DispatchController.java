@@ -66,6 +66,12 @@ public class DispatchController {
         return GlobalUtil.PackResponse(maps);
     }
 
+    @GetMapping("/getDispatchInfo")
+    public String getDispatchInfo(@RequestParam(name="id")String id){
+        Map map = dispatchService.getDispatchInfo(id);
+        return GlobalUtil.PackResponse(map);           
+    }
+
     @PostMapping("/addDispatchRecord")
     public void addDispatchRecord(@RequestParam(name="record")String record) throws Exception{
         dispatchService.addDispatchRecord((Map) JSONObject.parse(record));

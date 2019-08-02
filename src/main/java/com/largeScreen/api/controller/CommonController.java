@@ -71,8 +71,8 @@ public class CommonController {
     }
 
     @GetMapping("/spot/getJctbInfo")
-    public String getJctbInfo(@RequestParam(name="layerId")String layerId, @RequestParam(name="jctbId")String jctbId) {
-        Map map = commonService.getJctbInfo(layerId, jctbId);
+    public String getJctbInfo(@RequestParam(name="layerId")String layerId, @RequestParam(name="tbbh")String tbbh, @RequestParam(name="xzqdm")String xzqdm) {
+        Map map = commonService.getJctbInfo(layerId, tbbh, xzqdm);
         return GlobalUtil.PackResponse(map);
     }
 
