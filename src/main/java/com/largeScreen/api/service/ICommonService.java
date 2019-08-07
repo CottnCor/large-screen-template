@@ -23,13 +23,21 @@ public interface ICommonService {
 
     Map getStorageAddress(String id);
 
+    List<Map> getConfigDic(String layerId);
+
+    List<Map> getJzInfoDic(String layerId);
+
+    List<Map> getJctbInfoDic(String layerId);
+
     Map getJctbInfo(String layerId, String tbbh, String xzqdm);
 
     List<Map> getVisibleJctb(Double minx, Double miny, Double maxx, Double maxy);
 
-    List<Map> getJctbAffix(String layerId, String jctbId);
+    List<Map> getJctbAffix(String layerId, String tbbh, String xzqdm);
 
     void addJctbAffix(Map record) throws Exception;
 
     void editJctbInfo(Map record) throws Exception;
+
+    Map invokeMethod(String method);
 }

@@ -1,5 +1,6 @@
 package com.largeScreen.api.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.largeScreen.api.annotations.DataSource;
 import com.largeScreen.api.aop.DataSourceEnum;
 import com.largeScreen.api.mapper.CommonMapper;
@@ -119,9 +120,60 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getConfigDic(String key) {
+        try {
+            return commonMapper.selectConfigDic(key);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getJzInfoDic(String layerId) {
+        try {
+            List<Map> fields = commonMapper.selectJzInfoDic(layerId);
+            for (Map field : fields) {
+                if(field.containsKey("casevalue")){
+                    Map casevalue = JSON.parseObject(field.get("casevalue").toString());
+                    if(casevalue.containsKey("DicCode")){
+                        String dicCode = casevalue.get("DicCode").toString();
+                        List<Map> content = this.getConfigDic(dicCode);
+                        field.put("content", content);
+                    }
+                }
+            }
+            return fields;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getJctbInfoDic(String layerId) {
+        try {
+            List<Map> fields = commonMapper.selectJctbInfoDic(layerId);
+            for (Map field : fields) {
+                if(field.containsKey("casevalue")){
+                    String translate = field.get("casevalue").toString();
+                    if(translate != null && translate != "" && translate.contains("translate")){
+                        field.put("translate", translate);
+                    }
+                }
+            }
+            return fields;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getJctbInfo(String layerId, String tbbh, String xzqdm) {
         try {
-            return commonMapper.selectJctbInfo(layerId, tbbh, xzqdm);
+            List<Map> fields = this.getJctbInfoDic(layerId);
+            return commonMapper.selectJctbInfo(fields, layerId, tbbh, xzqdm);
         } catch (Exception ex) {
             return null;
         }
@@ -148,9 +200,9 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public List<Map> getJctbAffix(String layerId, String jctbId) {
+    public List<Map> getJctbAffix(String layerId, String tbbh, String xzqdm) {
         try {
-            return commonMapper.selectJctbAffix(layerId, jctbId);
+            return commonMapper.selectJctbAffix(layerId, tbbh, xzqdm);
         } catch (Exception ex) {
             return null;
         }
@@ -166,5 +218,15 @@ public class CommonServiceImpl implements ICommonService {
     @DataSource(DataSourceEnum.ZXJZ)
     public void editJctbInfo(Map record) throws Exception {
         commonMapper.updateJctbInfo(record);
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
+    public Map invokeMethod(String method) {
+        try {
+            return commonMapper.invokeMethod(method);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 }

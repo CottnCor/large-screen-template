@@ -25,13 +25,21 @@ public interface CommonMapper {
 
     Map selectStorageAddress(@Param("id") String xzqdm);
 
-    Map selectJctbInfo(@Param("layerId") String layerId, @Param("tbbh") String tbbh, @Param("xzqdm") String xzqdm);
+    List<Map> selectConfigDic(@Param("key") String key);
+
+    List<Map> selectJzInfoDic(@Param("layerId") String layerId);
+
+    List<Map> selectJctbInfoDic(@Param("layerId") String layerId);
+
+    Map selectJctbInfo(@Param("fields") List<Map> fields, @Param("layerId") String layerId, @Param("tbbh") String tbbh, @Param("xzqdm") String xzqdm);
 
     List<Map> selectVisibleJctb(@Param("minx") Double minx, @Param("miny") Double miny, @Param("maxx") Double maxx, @Param("maxy") Double maxy, @Param("layerId") String layerId);
 
-    List<Map> selectJctbAffix(@Param("layerId") String layerId, @Param("jctbId") String jctbId);
+    List<Map> selectJctbAffix(@Param("layerId") String layerId, @Param("tbbh") String tbbh, @Param("xzqdm") String xzqdm);
 
     void insertJctbAffix(@Param("record") Map record);
 
     void updateJctbInfo(@Param("record") Map record);
+
+    Map invokeMethod(@Param("method") String method);
 }

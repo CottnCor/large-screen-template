@@ -70,6 +70,24 @@ public class CommonController {
         return GlobalUtil.PackResponse(map);
     }
 
+    @PostMapping("/config/getConfigDic")
+    public String getConfigDic(@RequestParam(name="key")String key) throws Exception {
+        List<Map> map = commonService.getConfigDic(key);
+        return GlobalUtil.PackResponse(map);
+    }
+
+    @PostMapping("/spot/getJzInfoDic")
+    public String getJzInfoDic(@RequestParam(name="layerId")String layerId) throws Exception {
+        List<Map> map = commonService.getJzInfoDic(layerId);
+        return GlobalUtil.PackResponse(map);
+    }
+
+    @PostMapping("/spot/getJctbInfoDic")
+    public String getJctbInfoDic(@RequestParam(name="layerId")String layerId) throws Exception {
+        List<Map> map = commonService.getJctbInfoDic(layerId);
+        return GlobalUtil.PackResponse(map);
+    }
+
     @GetMapping("/spot/getJctbInfo")
     public String getJctbInfo(@RequestParam(name="layerId")String layerId, @RequestParam(name="tbbh")String tbbh, @RequestParam(name="xzqdm")String xzqdm) {
         Map map = commonService.getJctbInfo(layerId, tbbh, xzqdm);
@@ -83,8 +101,8 @@ public class CommonController {
     }
 
     @GetMapping("/spot/getJctbAffix")
-    public String getJctbAffix(@RequestParam(name="layerId")String layerId, @RequestParam(name="jctbId")String jctbId) {
-        List<Map> maps = commonService.getJctbAffix(layerId, jctbId);
+    public String getJctbAffix(@RequestParam(name="layerId")String layerId, @RequestParam(name="tbbh")String tbbh, @RequestParam(name="xzqdm")String xzqdm) {
+        List<Map> maps = commonService.getJctbAffix(layerId, tbbh, xzqdm);
         return GlobalUtil.PackResponse(maps);
     }
 
@@ -96,5 +114,11 @@ public class CommonController {
     @PostMapping("/spot/editJctbInfo")
     public void editJctbInfo(@RequestParam(name="record")String record) throws Exception {
         commonService.editJctbInfo((Map) JSONObject.parse(record));
+    }
+
+    @GetMapping("/config/invokeMethod")
+    public String invokeMethod(@RequestParam(name="method")String method) {
+        Map maps = commonService.invokeMethod(method);
+        return GlobalUtil.PackResponse(maps);
     }
 }

@@ -119,38 +119,47 @@
     <select id="selectStorageAddress" resultType="java.util.Map" statementType="STATEMENT">
         SELECT f_address AS address FROM tbcm_servers WHERE f_id = '${id}'
     </select>
+    <select id="selectConfigDic" resultType="java.util.Map" statementType="STATEMENT">
+        WITH A AS (SELECT f_dicno FROM tbdm_enumeratorvalue WHERE f_key = '${key}')
+        SELECT B.f_code AS code,
+               B.f_name AS name,
+               B.f_pid  AS pid
+        FROM A
+                 LEFT JOIN tbdm_enumeratordomain B ON A.f_dicno = B.f_dicno
+    </select>
+    <select id="selectJzInfoDic" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT f_field     AS field,
+               f_aliasname AS alias,
+               f_casevalue AS casevalue,
+               f_order     AS order
+        FROM tbcm_querydata_config
+        WHERE f_layerid = '${layerId}'
+          AND f_type = '4'
+          AND f_enable = '1'
+          AND f_visible = '1'
+          AND f_subtype = '3'
+          AND f_pid = '1001'
+        ORDER BY f_order ASC
+    </select>
+    <select id="selectJctbInfoDic" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT f_field     AS field,
+               f_aliasname AS alias,
+               f_order     AS order,
+               f_casevalue AS casevalue
+        FROM tbcm_querydata_config
+        WHERE f_layerid = '${layerId}'
+          AND f_type = '4'
+          AND f_enable = '1'
+          AND f_visible = '1'
+          AND f_subtype = '1'
+          AND f_pid = '1001'
+        ORDER BY f_order ASC
+    </select>
     <select id="selectJctbInfo" resultType="java.util.Map" statementType="STATEMENT">
         select
-        f_id as id,
-        f_pid as pid,
-        f_tbybh as tbybh,
-        f_dcbz as dcbz,
-        f_xzqdm as xzqdm,
-        f_xzqmc as xzqmc,
-        f_tbmj as tbmj,
-        f_tblb as tblb,
-        f_qsdwmc as qsdwmc,
-        st_astext(f_shape) AS wkt,
-        <choose>
-            <when test="layerId=='1014'">
-                f_ybdl as ybdl,
-                f_ybms as ybms,
-                f_bz as bz,
-                f_bzsm as bzsm
-            </when>
-            <otherwise>
-                f_wyrddl as wyrddl,
-                f_sfjz as sfjz,
-                f_wjzlx as wjzlx,
-                f_wybz as wybz,
-                f_jzsm as jzsm,
-                f_jkbsm as jkbsm,
-                f_qsxz as qsxz,
-                f_dlbm as dlbm,
-                f_ypdl as ypdl,
-                f_nybz as nybz
-            </otherwise>
-        </choose>
+        <foreach item="item" collection="fields" separator=", ">
+            ${item.field}
+        </foreach>
         from
         <choose>
             <when test="layerId=='1014'">
@@ -176,36 +185,10 @@
     </select>
     <select id="selectVisibleJctb" resultType="java.util.Map" statementType="STATEMENT">
         select
-        f_id as id,
         f_pid as pid,
         f_tbybh as tbybh,
-        f_dcbz as dcbz,
         f_xzqdm as xzqdm,
-        f_xzqmc as xzqmc,
-        f_tbmj as tbmj,
-        f_tblb as tblb,
-        f_qsdwmc as qsdwmc,
-        st_astext(f_shape) AS wkt,
-        <choose>
-            <when test="layerId=='1014'">
-                f_ybdl as ybdl,
-                f_ybms as ybms,
-                f_bz as bz,
-                f_bzsm as bzsm
-            </when>
-            <otherwise>
-                f_wyrddl as wyrddl,
-                f_sfjz as sfjz,
-                f_wjzlx as wjzlx,
-                f_wybz as wybz,
-                f_jzsm as jzsm,
-                f_jkbsm as jkbsm,
-                f_qsxz as qsxz,
-                f_dlbm as dlbm,
-                f_ypdl as ypdl,
-                f_nybz as nybz
-            </otherwise>
-        </choose>
+        st_astext(f_shape) AS wkt
         from
         <choose>
             <when test="layerId=='1014'">
@@ -231,23 +214,24 @@
         <![CDATA[ >= ]]> ${miny} and f_centery <![CDATA[ <= ]]> ${maxy})
     </select>
     <select id="selectJctbAffix" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT
-            t1.f_id as id,
-            t1.f_type as type,
-            t1.f_angle as angle,
-            t1.f_xzqdm as xzqdm,
-            (t2.f_address || '/' || t1.f_filelocation) as filelocation,
-            (t2.f_address || '/' || t1.f_thumbfilepath) as thumbfilepath,
-            t1.f_phototype as phototype,
-            t1.f_userid as userid,
-            t1.f_username as name,
-            t1.f_mediasize as mediasize,
-            t1.f_jctbid as jctbid,
-            t1.f_layerid as layerid
+        SELECT t1.f_id                                     as id,
+               t1.f_type                                   as type,
+               t1.f_angle                                  as angle,
+               t1.f_xzqdm                                  as xzqdm,
+               (t2.f_address || '/' || t1.f_filelocation)  as filelocation,
+               (t2.f_address || '/' || t1.f_thumbfilepath) as thumbfilepath,
+               t1.f_phototype                              as phototype,
+               t1.f_userid                                 as userid,
+               t1.f_username                               as name,
+               t1.f_mediasize                              as mediasize,
+               t1.f_jctbid                                 as jctbid,
+               t1.f_layerid                                as layerid,
+               f_jcbh                                      as tbbh
         FROM
             tb_multimediadata t1 left join tbcm_servers t2 on t1.f_serverid = t2.f_id
-        WHERE
-            t1.f_jctbid = '${jctbId}' and t1.f_layerid = '${layerId}'
+        WHERE t1.f_jcbh = '${tbbh}'
+          AND t1.f_xzqdm = '${xzqdm}'
+          AND t1.f_state > 0
     </select>
     <insert id="insertJctbAffix" statementType="STATEMENT">
 
@@ -284,4 +268,7 @@
         </set>
         where f_id='${record.jctbId}'
     </update>
+    <select id="invokeMethod" resultType="java.util.Map" statementType="STATEMENT">
+        select ${method} AS value
+    </select>
 </mapper>
