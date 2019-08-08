@@ -138,8 +138,8 @@ public class CommonServiceImpl implements ICommonService {
                     Map casevalue = JSON.parseObject(field.get("casevalue").toString());
                     if(casevalue.containsKey("DicCode")){
                         String dicCode = casevalue.get("DicCode").toString();
-                        List<Map> content = this.getConfigDic(dicCode);
-                        field.put("content", content);
+                        List<Map> options = this.getConfigDic(dicCode);
+                        field.put("options", options);
                     }
                 }
             }
@@ -178,6 +178,7 @@ public class CommonServiceImpl implements ICommonService {
             return null;
         }
     }
+
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)

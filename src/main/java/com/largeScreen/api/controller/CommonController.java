@@ -70,19 +70,19 @@ public class CommonController {
         return GlobalUtil.PackResponse(map);
     }
 
-    @PostMapping("/config/getConfigDic")
+    @GetMapping("/config/getConfigDic")
     public String getConfigDic(@RequestParam(name="key")String key) throws Exception {
         List<Map> map = commonService.getConfigDic(key);
         return GlobalUtil.PackResponse(map);
     }
 
-    @PostMapping("/spot/getJzInfoDic")
+    @GetMapping("/spot/getJzInfoDic")
     public String getJzInfoDic(@RequestParam(name="layerId")String layerId) throws Exception {
         List<Map> map = commonService.getJzInfoDic(layerId);
         return GlobalUtil.PackResponse(map);
     }
 
-    @PostMapping("/spot/getJctbInfoDic")
+    @GetMapping("/spot/getJctbInfoDic")
     public String getJctbInfoDic(@RequestParam(name="layerId")String layerId) throws Exception {
         List<Map> map = commonService.getJctbInfoDic(layerId);
         return GlobalUtil.PackResponse(map);
