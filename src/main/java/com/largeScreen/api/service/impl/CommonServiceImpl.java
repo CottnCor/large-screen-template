@@ -110,6 +110,16 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
+    public Map getOssConfig() {
+        try {
+            return commonMapper.selectOssConfig();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
     public Map getStorageAddress(String id) {
         try {
             return commonMapper.selectStorageAddress(id);
@@ -120,9 +130,40 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public List<Map> getConfigDic(String key) {
+    public List<Map> getConfigDic(String layerId, String type, Integer pid, Integer subtype) {
         try {
-            return commonMapper.selectConfigDic(key);
+            return commonMapper.selectConfigDic(layerId, type, pid, subtype);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getEnumeratorDic(String key) {
+        try {
+            return commonMapper.selectEnumeratorDic(key);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    @DataSource(DataSourceEnum.ZXJZ)
+    public List<Map> getSupervisedInfoDic(Integer level, String layerId) {
+        try {
+            List<Map> fields = commonMapper.selectConfigDic(layerId, "4", level == 1 ? 1001 : 1002, level == 1 ? 5 : 6);
+            for (Map field : fields) {
+                if (field.containsKey("casevalue")) {
+                    Map casevalue = JSON.parseObject(field.get("casevalue").toString());
+                    if (casevalue.containsKey("DicCode")) {
+                        String dicCode = casevalue.get("DicCode").toString();
+                        List<Map> options = this.getEnumeratorDic(dicCode);
+                        field.put("options", options);
+                    }
+                }
+            }
+            return fields;
         } catch (Exception ex) {
             return null;
         }
@@ -132,13 +173,13 @@ public class CommonServiceImpl implements ICommonService {
     @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getJzInfoDic(String layerId) {
         try {
-            List<Map> fields = commonMapper.selectJzInfoDic(layerId);
+            List<Map> fields = commonMapper.selectConfigDic(layerId, "4", 1001, 3);
             for (Map field : fields) {
                 if(field.containsKey("casevalue")){
                     Map casevalue = JSON.parseObject(field.get("casevalue").toString());
                     if(casevalue.containsKey("DicCode")){
                         String dicCode = casevalue.get("DicCode").toString();
-                        List<Map> options = this.getConfigDic(dicCode);
+                        List<Map> options = this.getEnumeratorDic(dicCode);
                         field.put("options", options);
                     }
                 }
@@ -153,7 +194,7 @@ public class CommonServiceImpl implements ICommonService {
     @DataSource(DataSourceEnum.ZXJZ)
     public List<Map> getJctbInfoDic(String layerId) {
         try {
-            List<Map> fields = commonMapper.selectJctbInfoDic(layerId);
+            List<Map> fields = commonMapper.selectConfigDic(layerId, "4", 1001, 1);
             for (Map field : fields) {
                 if(field.containsKey("casevalue")){
                     String translate = field.get("casevalue").toString();
@@ -170,9 +211,8 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public Map getJctbInfo(String layerId, String tbbh, String xzqdm) {
+    public Map getJctbInfo(String layerId, String tbbh, String xzqdm, List<String> fields) {
         try {
-            List<Map> fields = this.getJctbInfoDic(layerId);
             return commonMapper.selectJctbInfo(fields, layerId, tbbh, xzqdm);
         } catch (Exception ex) {
             return null;
@@ -211,14 +251,14 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public void addJctbAffix(Map record) throws Exception {
-        commonMapper.insertJctbAffix(record);
+    public void addJctbAffix(String layerId, String tbbh, String xzqdm, List<String> fields, List<String> values) throws Exception {
+//        commonMapper.insertJctbAffix(record);
     }
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public void editJctbInfo(Map record) throws Exception {
-        commonMapper.updateJctbInfo(record);
+    public void editJctbInfo(String layerId, String tbbh, String xzqdm, List<String> fields, List<String> values) throws Exception {
+//        commonMapper.updateJctbInfo(record);
     }
 
     @Override

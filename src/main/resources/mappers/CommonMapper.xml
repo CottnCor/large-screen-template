@@ -116,10 +116,20 @@
              t3
         ORDER BY t3.f_xzqdm
     </select>
+    <select id="getOssConfig" resultType="java.util.Map" statementType="STATEMENT">
+        SELECT f_type       AS type,
+               f_key        AS key,
+               f_keysecret  AS secret,
+               f_endpoint   AS endpoint,
+               f_bucketname AS bucket,
+               f_serverid   AS serverid
+        FROM tbsys_oss_config
+        WHERE f_isdefault = 1
+    </select>
     <select id="selectStorageAddress" resultType="java.util.Map" statementType="STATEMENT">
         SELECT f_address AS address FROM tbcm_servers WHERE f_id = '${id}'
     </select>
-    <select id="selectConfigDic" resultType="java.util.Map" statementType="STATEMENT">
+    <select id="selectEnumeratorDic" resultType="java.util.Map" statementType="STATEMENT">
         WITH A AS (SELECT f_dicno FROM tbdm_enumeratorvalue WHERE f_key = '${key}')
         SELECT B.f_code AS code,
                B.f_name AS name,
@@ -127,38 +137,24 @@
         FROM A
                  LEFT JOIN tbdm_enumeratordomain B ON A.f_dicno = B.f_dicno
     </select>
-    <select id="selectJzInfoDic" resultType="java.util.Map" statementType="STATEMENT">
+    <select id="selectConfigDic" resultType="java.util.Map" statementType="STATEMENT">
         SELECT f_field     AS field,
                f_aliasname AS alias,
                f_casevalue AS casevalue,
                f_order     AS order
         FROM tbcm_querydata_config
         WHERE f_layerid = '${layerId}'
-          AND f_type = '4'
-          AND f_enable = '1'
-          AND f_visible = '1'
-          AND f_subtype = '3'
-          AND f_pid = '1001'
-        ORDER BY f_order ASC
-    </select>
-    <select id="selectJctbInfoDic" resultType="java.util.Map" statementType="STATEMENT">
-        SELECT f_field     AS field,
-               f_aliasname AS alias,
-               f_order     AS order,
-               f_casevalue AS casevalue
-        FROM tbcm_querydata_config
-        WHERE f_layerid = '${layerId}'
-          AND f_type = '4'
-          AND f_enable = '1'
-          AND f_visible = '1'
-          AND f_subtype = '1'
-          AND f_pid = '1001'
+          AND f_type = '${type}'
+          AND f_enable = 1
+          AND f_visible = 1
+          AND f_subtype = ${subtype}
+          AND f_pid = ${pid}
         ORDER BY f_order ASC
     </select>
     <select id="selectJctbInfo" resultType="java.util.Map" statementType="STATEMENT">
         select
         <foreach item="item" collection="fields" separator=", ">
-            ${item.field}
+            ${item}
         </foreach>
         from
         <choose>

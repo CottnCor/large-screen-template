@@ -1,9 +1,13 @@
 package com.largeScreen.api.controller;
+
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.largeScreen.api.util.GlobalUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -70,9 +74,28 @@ public class CommonController {
         return GlobalUtil.PackResponse(map);
     }
 
+    @GetMapping("/config/getOssConfig")
+    public String getOssConfig() {
+        Map map = commonService.getOssConfig();
+        return GlobalUtil.PackResponse(map);
+    }
+
     @GetMapping("/config/getConfigDic")
-    public String getConfigDic(@RequestParam(name="key")String key) throws Exception {
-        List<Map> map = commonService.getConfigDic(key);
+    public String getEnumeratorDic(@RequestParam(name="layerId")String layerId, @RequestParam(name="type")String type, @RequestParam(name="pid")Integer pid, @RequestParam(name="subtype")Integer subtype) throws Exception {
+        List<Map> map = commonService.getConfigDic(layerId, type, pid, subtype);
+        return GlobalUtil.PackResponse(map);
+    }
+
+
+    @GetMapping("/config/getEnumeratorDic")
+    public String getEnumeratorDic(@RequestParam(name="key")String key) throws Exception {
+        List<Map> map = commonService.getEnumeratorDic(key);
+        return GlobalUtil.PackResponse(map);
+    }
+
+    @GetMapping("/spot/getSupervisedInfoDic")
+    public String getSupervisedInfoDic(@RequestParam(name="level")Integer level, @RequestParam(name="layerId")String layerId) throws Exception {
+        List<Map> map = commonService.getSupervisedInfoDic(level, layerId);
         return GlobalUtil.PackResponse(map);
     }
 
@@ -89,8 +112,13 @@ public class CommonController {
     }
 
     @GetMapping("/spot/getJctbInfo")
-    public String getJctbInfo(@RequestParam(name="layerId")String layerId, @RequestParam(name="tbbh")String tbbh, @RequestParam(name="xzqdm")String xzqdm) {
-        Map map = commonService.getJctbInfo(layerId, tbbh, xzqdm);
+    public String getJctbInfo(@RequestParam(name="filter")String filter) throws UnsupportedEncodingException {
+        filter = URLDecoder.decode(filter, "utf-8");
+        String layerId = JSON.parseObject(filter).getString("layerId");
+        String tbbh = JSON.parseObject(filter).getString("tbbh");
+        String xzqdm = JSON.parseObject(filter).getString("xzqdm");
+        List<String> fields = JSON.parseObject(filter).getJSONArray("fields").toJavaList(String.class);
+        Map map = commonService.getJctbInfo(layerId, tbbh, xzqdm, fields);
         return GlobalUtil.PackResponse(map);
     }
 
@@ -108,12 +136,24 @@ public class CommonController {
 
     @PostMapping("/spot/addJctbAffix")
     public void addJctbAffix(@RequestParam(name="record")String record) throws Exception {
-        commonService.addJctbAffix((Map) JSONObject.parse(record));
+        record = URLDecoder.decode(record, "utf-8");
+        String layerId = JSON.parseObject(record).getString("layerId");
+        String tbbh = JSON.parseObject(record).getString("tbbh");
+        String xzqdm = JSON.parseObject(record).getString("xzqdm");
+        List<String> fields = JSON.parseObject(record).getJSONArray("fields").toJavaList(String.class);
+        List<String> valus = JSON.parseObject(record).getJSONArray("valus").toJavaList(String.class);
+        commonService.addJctbAffix(layerId, tbbh, xzqdm, fields, valus);
     }
 
     @PostMapping("/spot/editJctbInfo")
     public void editJctbInfo(@RequestParam(name="record")String record) throws Exception {
-        commonService.editJctbInfo((Map) JSONObject.parse(record));
+        record = URLDecoder.decode(record, "utf-8");
+        String layerId = JSON.parseObject(record).getString("layerId");
+        String tbbh = JSON.parseObject(record).getString("tbbh");
+        String xzqdm = JSON.parseObject(record).getString("xzqdm");
+        List<String> fields = JSON.parseObject(record).getJSONArray("fields").toJavaList(String.class);
+        List<String> valus = JSON.parseObject(record).getJSONArray("valus").toJavaList(String.class);
+        commonService.editJctbInfo(layerId, tbbh, xzqdm, fields, valus);
     }
 
     @GetMapping("/config/invokeMethod")

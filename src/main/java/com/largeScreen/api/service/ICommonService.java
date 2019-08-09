@@ -21,23 +21,29 @@ public interface ICommonService {
 
     List<Map> getRegionGroups();
 
+    Map getOssConfig();
+
     Map getStorageAddress(String id);
 
-    List<Map> getConfigDic(String layerId);
+    List<Map> getEnumeratorDic(String key);
+
+    List<Map> getConfigDic(String layerId, String type, Integer pid, Integer subtype);
+
+    List<Map> getSupervisedInfoDic(Integer level, String layerId);
 
     List<Map> getJzInfoDic(String layerId);
 
     List<Map> getJctbInfoDic(String layerId);
 
-    Map getJctbInfo(String layerId, String tbbh, String xzqdm);
+    Map getJctbInfo(String layerId, String tbbh, String xzqdm, List<String> fields);
 
     List<Map> getVisibleJctb(Double minx, Double miny, Double maxx, Double maxy);
 
     List<Map> getJctbAffix(String layerId, String tbbh, String xzqdm);
 
-    void addJctbAffix(Map record) throws Exception;
+    void addJctbAffix(String layerId, String tbbh, String xzqdm, List<String> fields, List<String> values) throws Exception;
 
-    void editJctbInfo(Map record) throws Exception;
+    void editJctbInfo(String layerId, String tbbh, String xzqdm, List<String> fields, List<String> values) throws Exception;
 
     Map invokeMethod(String method);
 }

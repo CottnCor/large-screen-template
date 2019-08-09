@@ -23,15 +23,15 @@ public interface CommonMapper {
 
     Map selectRegionTagByXzqdm(@Param("xzqdm") String xzqdm);
 
+    Map selectOssConfig();
+
     Map selectStorageAddress(@Param("id") String xzqdm);
 
-    List<Map> selectConfigDic(@Param("key") String key);
+    List<Map> selectEnumeratorDic(@Param("key") String key);
 
-    List<Map> selectJzInfoDic(@Param("layerId") String layerId);
+    List<Map> selectConfigDic(@Param("layerId") String layerId, @Param("type") String type, @Param("pid") Integer pid, @Param("subtype") Integer subtype);
 
-    List<Map> selectJctbInfoDic(@Param("layerId") String layerId);
-
-    Map selectJctbInfo(@Param("fields") List<Map> fields, @Param("layerId") String layerId, @Param("tbbh") String tbbh, @Param("xzqdm") String xzqdm);
+    Map selectJctbInfo(@Param("fields") List<String> fields, @Param("layerId") String layerId, @Param("tbbh") String tbbh, @Param("xzqdm") String xzqdm);
 
     List<Map> selectVisibleJctb(@Param("minx") Double minx, @Param("miny") Double miny, @Param("maxx") Double maxx, @Param("maxy") Double maxy, @Param("layerId") String layerId);
 
