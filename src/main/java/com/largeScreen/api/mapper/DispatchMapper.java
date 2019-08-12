@@ -19,7 +19,7 @@ public interface DispatchMapper {
 
     List<Map> selectDispatchRecord(@Param("limit") Short limit, @Param("page") Short page);
 
-    List<Map> selectDispatchList(@Param("state") List<Short> state, @Param("segmentId") String segmentId, @Param("limit") Short limit, @Param("page") Short page);
+    List<Map> selectDispatchList(@Param("state") List<Short> state, @Param("segmentId") List<String> segmentId, @Param("limit") Short limit, @Param("page") Short page);
 
     List<Map> selectDispatchCoords(@Param("id") String id);
 

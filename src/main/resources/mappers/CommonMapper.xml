@@ -235,34 +235,32 @@
     <update id="updateJctbInfo" statementType="STATEMENT">
         UPDATE
         <choose>
-            <when test="record.layerId=='1014'">
+            <when test="layerId=='1014'">
                 tb_sd_ybjz
             </when>
-            <when test="record.layerId=='1015'">
+            <when test="layerId=='1015'">
                 tb_sd_ccjz
             </when>
-            <when test="record.layerId=='1016'">
+            <when test="layerId=='1016'">
                 tb_sd_bcjz
             </when>
-            <when test="record.layerId=='1017'">
+            <when test="layerId=='1017'">
                 tb_sd_zxjz
             </when>
-            <when test="record.layerId=='1018'">
+            <when test="layerId=='1018'">
                 tb_bgdc_jctb
             </when>
-            <when test="record.layerId=='1019'">
+            <when test="layerId=='1019'">
                 tb_bgdc_zddl
             </when>
         </choose>
         <set>
-            f_wyrddl='${record.wyrddl}',
-            f_dcbz='${record.dcbz}',
-            f_sfjz='${record.sfjz}',
-            f_wjzlx='${record.wjzlx}',
-            f_wybz='${record.wybz}',
-            f_jzsm='${record.jzsm}'
+            <foreach item="item" collection="params" separator=", ">
+                ${item.field} = '${item.value}'
+            </foreach>
         </set>
-        where f_id='${record.jctbId}'
+        where f_tbybh = '${tbbh}'
+        AND f_xzqdm = '${xzqdm}'
     </update>
     <select id="invokeMethod" resultType="java.util.Map" statementType="STATEMENT">
         select ${method} AS value

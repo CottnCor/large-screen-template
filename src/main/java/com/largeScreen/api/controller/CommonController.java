@@ -135,25 +135,25 @@ public class CommonController {
     }
 
     @PostMapping("/spot/addJctbAffix")
-    public void addJctbAffix(@RequestParam(name="record")String record) throws Exception {
+    public String addJctbAffix(@RequestParam(name="record")String record) throws Exception {
         record = URLDecoder.decode(record, "utf-8");
         String layerId = JSON.parseObject(record).getString("layerId");
         String tbbh = JSON.parseObject(record).getString("tbbh");
         String xzqdm = JSON.parseObject(record).getString("xzqdm");
-        List<String> fields = JSON.parseObject(record).getJSONArray("fields").toJavaList(String.class);
-        List<String> valus = JSON.parseObject(record).getJSONArray("valus").toJavaList(String.class);
-        commonService.addJctbAffix(layerId, tbbh, xzqdm, fields, valus);
+        List<Map> params = JSON.parseObject(record).getJSONArray("params").toJavaList(Map.class);
+        Boolean flag = commonService.addJctbAffix(layerId, tbbh, xzqdm, params);
+        return GlobalUtil.PackResponse(flag);
     }
 
     @PostMapping("/spot/editJctbInfo")
-    public void editJctbInfo(@RequestParam(name="record")String record) throws Exception {
+    public String editJctbInfo(@RequestParam(name="record")String record) throws Exception {
         record = URLDecoder.decode(record, "utf-8");
         String layerId = JSON.parseObject(record).getString("layerId");
         String tbbh = JSON.parseObject(record).getString("tbbh");
         String xzqdm = JSON.parseObject(record).getString("xzqdm");
-        List<String> fields = JSON.parseObject(record).getJSONArray("fields").toJavaList(String.class);
-        List<String> valus = JSON.parseObject(record).getJSONArray("valus").toJavaList(String.class);
-        commonService.editJctbInfo(layerId, tbbh, xzqdm, fields, valus);
+        List<Map> params = JSON.parseObject(record).getJSONArray("params").toJavaList(Map.class);
+        Boolean flag = commonService.editJctbInfo(layerId, tbbh, xzqdm, params);
+        return GlobalUtil.PackResponse(flag);
     }
 
     @GetMapping("/config/invokeMethod")

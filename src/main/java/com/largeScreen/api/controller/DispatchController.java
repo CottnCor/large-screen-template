@@ -54,7 +54,7 @@ public class DispatchController {
         filter = URLDecoder.decode(filter, "utf-8");
         Short page = JSON.parseObject(filter).getShort("page");
         Short limit = JSON.parseObject(filter).getShort("limit");
-        String segmentId = JSON.parseObject(filter).getString("segmentId");
+        List<String> segmentId = JSON.parseObject(filter).getJSONArray("segmentId").toJavaList(String.class);
         List<Short> state = JSON.parseObject(filter).getJSONArray("state").toJavaList(Short.class);
         List<Map> maps = dispatchService.getDispatchList(state, segmentId, limit, page);
         return GlobalUtil.PackResponse(maps);

@@ -161,6 +161,10 @@ public class CommonServiceImpl implements ICommonService {
                         List<Map> options = this.getEnumeratorDic(dicCode);
                         field.put("options", options);
                     }
+                    if(casevalue.containsKey("Type")){
+                        Short type = Short.valueOf(casevalue.get("Type").toString());
+                        field.put("type", type);
+                    }
                 }
             }
             return fields;
@@ -181,6 +185,10 @@ public class CommonServiceImpl implements ICommonService {
                         String dicCode = casevalue.get("DicCode").toString();
                         List<Map> options = this.getEnumeratorDic(dicCode);
                         field.put("options", options);
+                    }
+                    if(casevalue.containsKey("Type")){
+                        Short type = Short.valueOf(casevalue.get("Type").toString());
+                        field.put("type", type);
                     }
                 }
             }
@@ -251,14 +259,23 @@ public class CommonServiceImpl implements ICommonService {
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public void addJctbAffix(String layerId, String tbbh, String xzqdm, List<String> fields, List<String> values) throws Exception {
-//        commonMapper.insertJctbAffix(record);
+    public Boolean addJctbAffix(String layerId, String tbbh, String xzqdm, List<Map> params) throws Exception {
+        try {
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     @Override
     @DataSource(DataSourceEnum.ZXJZ)
-    public void editJctbInfo(String layerId, String tbbh, String xzqdm, List<String> fields, List<String> values) throws Exception {
-//        commonMapper.updateJctbInfo(record);
+    public Boolean editJctbInfo(String layerId, String tbbh, String xzqdm, List<Map> params) throws Exception {
+        try {
+            commonMapper.updateJctbInfo(layerId, tbbh, xzqdm, params);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     @Override

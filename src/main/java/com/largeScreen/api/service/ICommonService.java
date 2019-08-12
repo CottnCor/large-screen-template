@@ -41,9 +41,9 @@ public interface ICommonService {
 
     List<Map> getJctbAffix(String layerId, String tbbh, String xzqdm);
 
-    void addJctbAffix(String layerId, String tbbh, String xzqdm, List<String> fields, List<String> values) throws Exception;
+    Boolean addJctbAffix(String layerId, String tbbh, String xzqdm, List<Map> params) throws Exception;
 
-    void editJctbInfo(String layerId, String tbbh, String xzqdm, List<String> fields, List<String> values) throws Exception;
+    Boolean editJctbInfo(String layerId, String tbbh, String xzqdm, List<Map> params) throws Exception;
 
     Map invokeMethod(String method);
 }

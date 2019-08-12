@@ -39,7 +39,7 @@ public interface CommonMapper {
 
     void insertJctbAffix(@Param("record") Map record);
 
-    void updateJctbInfo(@Param("record") Map record);
+    void updateJctbInfo(@Param("layerId") String layerId, @Param("tbbh") String tbbh, @Param("xzqdm") String xzqdm, @Param("params") List<Map> params);
 
     Map invokeMethod(@Param("method") String method);
 }

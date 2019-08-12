@@ -110,10 +110,21 @@
                 FROM
                     tb_video_takenumber
                 WHERE
-                    f_fhsd_id = '${segmentId}'
+                    <choose>
+                        <when test="segmentId!=null">
+                            <foreach item="item" collection="segmentId" open="(" close=")" separator=" OR ">
+                                f_fhsd_id = '${item}'
+                            </foreach>
+                        </when>
+                    </choose>
+                    <choose>
+                        <when test="segmentId.size() > 0 and state.size() > 0">
+                            AND
+                        </when>
+                    </choose>
                     <choose>
                         <when test="state!=null">
-                            <foreach item="item" collection="state" open=" AND (" close=")" separator=" OR ">
+                            <foreach item="item" collection="state" open="(" close=")" separator=" OR ">
                                 f_state = ${item}
                             </foreach>
                         </when>
@@ -125,12 +136,13 @@
                         LIMIT ${limit} OFFSET ${limit} * (${page} - 1)
                     </when>
                 </choose>
-            ) SELECT
-                  t1.*,
-                  ( CASE WHEN t2.f_userid IS NULL THEN 0 ELSE 1 END ) AS islogin
-            FROM
-                t1
-                    LEFT JOIN ( SELECT f_userid FROM tbsys_user WHERE f_updatetime > ( now() - '00:01:01' :: INTERVAL ) AND f_islogin = 1 ) t2 ON t1.userId = t2.f_userid
+            ) , t2 AS (SELECT
+        t1.*,
+        ( CASE WHEN t2.f_userid IS NULL THEN 0 ELSE 1 END ) AS islogin
+        FROM
+        t1
+        LEFT JOIN ( SELECT f_userid FROM tbsys_user WHERE f_updatetime > ( now() - '00:01:01' :: INTERVAL ) AND f_islogin = 1 ) t2 ON t1.userId = t2.f_userid)
+        SELECT t2.*, t3.f_aliasname AS layerAlias from t2 LEFT JOIN tbcm_layer_object t3 ON t2.layerId = t3.f_id
     </select>
     <select id="selectDispatchCoords" resultType="java.util.Map" statementType="STATEMENT">
         SELECT
