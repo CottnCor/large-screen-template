@@ -27,7 +27,8 @@
         f_ddy_id AS ddyId,
         f_roomid AS roomId,
         f_filepath AS filePath,
-        f_biz_id AS bizId
+        f_biz_id AS bizId,
+        f_devicestate AS deviceState
         FROM
         tb_video_record T
         ORDER BY
@@ -39,36 +40,15 @@
         </choose>
         ),
         t1 AS ( SELECT t0.*, t2.f_username AS username FROM t0 LEFT JOIN tbsys_user t2 ON t0.userId = t2.f_userid ),
-        t3 AS (
-        SELECT A
-        .*
-        FROM
-        tb_video_devicestate A,
-        ( SELECT f_recordid, MAX ( f_createtime ) f_createtime FROM tb_video_devicestate GROUP BY f_recordid ) b
-        WHERE
-        A.f_recordid = b.f_recordid
-        AND A.f_createtime = b.f_createtime
-        ORDER BY
-        A.f_recordid
-        ),
-        t4 AS (
-        SELECT
-        t1.*,
-        t3.f_X AS to_x,
-        t3.f_y AS to_y
-        FROM
-        t1
-        LEFT JOIN t3 ON t1.ID = t3.f_recordid
-        ),
         t5 AS (
         SELECT
-        t4.*,
+        t1.*,
         t6.f_tbbh AS tbid,
         t6.f_layer_id AS layerid,
         t6.f_xzqdm AS to_xzqdm
         FROM
-        t4
-        LEFT JOIN tb_video_takenumber t6 ON t4.takenumberId = t6.f_id
+        t1
+        LEFT JOIN tb_video_takenumber t6 ON t1.takenumberId = t6.f_id
         ),
         t7 AS ( SELECT t5.*, t8.f_depid AS depId FROM t5 LEFT JOIN tbsys_user t8 ON t5.ddyId = t8.f_userid ),
         t9 AS (
@@ -79,16 +59,18 @@
         t7
         LEFT JOIN tb_department t10 ON t7.depId = t10.f_id
         ),
-        t11 AS (
-        SELECT
-        t9.*,
-        t12.f_centerx AS from_x,
-        t12.f_centery AS from_y
-        FROM
-        t9
-        LEFT JOIN tb_region t12 ON t9.from_xzqdm = t12.f_xzqdm
-        ) SELECT
-        *
+        t11 AS ( SELECT t9.*, t12.f_centerx AS from_x, t12.f_centery AS from_y FROM t9 LEFT JOIN tb_region t12 ON t9.from_xzqdm = t12.f_xzqdm ) SELECT
+        id,
+        takenumberId,
+        startTime,
+        endTime,
+        userId,
+        ddyId,
+        roomId,
+        filePath,
+        bizId,
+        deviceState,
+
         FROM
         t11
     </select>
